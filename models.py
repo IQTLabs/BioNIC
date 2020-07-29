@@ -47,11 +47,15 @@ def get_activation(name):
 
 # the base model class used in all our experiments
 class Model():
-    def __init__(self, name, model, optimizer='adam', loss_func=nn.CrossEntropyLoss()):
+    def __init__(self, name, model, learning_rate, optimizer='adam', loss_func=nn.CrossEntropyLoss()):
         self.name = name
         self.model = model
+
         if optimizer == 'adam':
-            self.optimizer = optim.Adam(model.fc.parameters(), lr=learning_rate)
+            if "ResNet" in name:
+                self.optimizer = optim.Adam(self.model.fc.parameters(), lr=learning_rate)
+            else:
+                self.optimizer = optim.Adam(self.model.parameters(), lr=learning_rate)
         else:
             self.optimizer = optimizer
         self.loss_fn = loss_func
@@ -279,7 +283,7 @@ class ResNet50ModelAllLayers(Model):
             nn.BatchNorm1d(num_features=256),
             nn.Linear(256, n_classes))
 
-        Model.__init__(self, "ResNet50ModelAllLayers", model, optimizer, loss_func)
+        Model.__init__(self, "ResNet50ModelAllLayers", model, learning_rate)
 
 # ResNet18 model using all layers with two LL+BN for a classifier
 class ResNet18ModelAllLayers(Model):
@@ -295,7 +299,7 @@ class ResNet18ModelAllLayers(Model):
             nn.BatchNorm1d(num_features=256),
             nn.Linear(256, n_classes))
 
-        Model.__init__(self, "ResNet18ModelAllLayers", model, optimizer, loss_func)
+        Model.__init__(self, "ResNet18ModelAllLayers", model, learning_rate)
 
 # ResNet18 model using first two blocks with three LL+BN for a classifier
 class ResNet18ModelLowerLayers(Model):
@@ -318,7 +322,7 @@ class ResNet18ModelLowerLayers(Model):
             nn.BatchNorm1d(num_features=32),            
             nn.Linear(32, n_classes))   
 
-        Model.__init__(self, "ResNet18ModelLowerLayers", model, optimizer, loss_func)
+        Model.__init__(self, "ResNet18ModelLowerLayers", model, learning_rate)
 
 # Vgg16 model using all layers with two LL+BN for a classifier
 class VggModelAllLayers(Model):
@@ -337,7 +341,7 @@ class VggModelAllLayers(Model):
             nn.Linear(256, n_classes))
         model.classifier[6].out_features = n_classes
 
-        Model.__init__(self, "VggModelAllLayers", model, optimizer, loss_func)
+        Model.__init__(self, "VggModelAllLayers", model, learning_rate)
 
 # Vgg19 model using all layers with two LL+BN for a classifier
 class Vgg19ModelAllLayers(Model):
@@ -357,7 +361,7 @@ class Vgg19ModelAllLayers(Model):
             nn.Linear(256, n_classes))
         model.classifier[6].out_features = n_classes
 
-        Model.__init__(self, "Vgg19ModelAllLayers", model, optimizer, loss_func)
+        Model.__init__(self, "Vgg19ModelAllLayers", model, learning_rate)
 
 # Vgg16 model using first 13 layers only with three LL+BN for a classifier
 class VggModelLowerLayers(Model):
@@ -403,7 +407,7 @@ class VggModelLowerLayers(Model):
             nn.Linear(256, n_classes))
         model.classifier[6].out_features = n_classes
 
-        Model.__init__(self, "VggModelLowerLayers", model, optimizer, loss_func)
+        Model.__init__(self, "VggModelLowerLayers", model, learning_rate)
 
 # #########################################################################################################################################################
 # BESPOKE model classes
@@ -474,21 +478,21 @@ class CNNGreyscale(nn.Module):
 
         # batchnorm after activation: https://blog.paperspace.com/busting-the-myths-about-batch-normalization/
         self.conv_base = nn.Sequential(
-            nn.Conv2d(in_channels=1, out_channels=16, kernel_size=7, stride=1, padding=1),
+            nn.Conv2d(in_channels=1, out_channels=10, kernel_size=7, stride=1, padding=1),
             nn.ReLU(),
-            nn.BatchNorm2d(num_features=16),
+            nn.BatchNorm2d(num_features=10),
 
             nn.MaxPool2d(kernel_size=3, stride=2),
 
-            nn.Conv2d(in_channels=16, out_channels=32, kernel_size=7, stride=1, padding=1),
+            nn.Conv2d(in_channels=10, out_channels=20, kernel_size=7, stride=1, padding=1),
             nn.ReLU(),
-            nn.BatchNorm2d(num_features=32),
+            nn.BatchNorm2d(num_features=20),
 
-            nn.MaxPool2d(kernel_size=3, stride=2),
+            #nn.MaxPool2d(kernel_size=3, stride=2),
 
-            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=7, stride=1, padding=1),
-            nn.ReLU(),
-            nn.BatchNorm2d(num_features=64),
+            #nn.Conv2d(in_channels=32, out_channels=64, kernel_size=7, stride=1, padding=1),
+            #nn.ReLU(),
+            #nn.BatchNorm2d(num_features=64),
 
             #nn.MaxPool2d(kernel_size=3, stride=2),     
 
@@ -502,15 +506,15 @@ class CNNGreyscale(nn.Module):
             #nn.ReLU(),
             #nn.BatchNorm2d(num_features=512),
 
-            nn.AvgPool2d(kernel_size=3, stride=2)
+            nn.AvgPool2d(kernel_size=4, stride=2)
         )
                     
         self.fc = nn.Sequential(
-            nn.Linear(33856, 256),
+            nn.Linear(162000, 1024),
             nn.ReLU(),
             nn.Dropout(0.5), 
             #nn.BatchNorm1d(num_features=256),
-            nn.Linear(256, 128),
+            nn.Linear(1024, 128),
             nn.ReLU(),
             nn.Dropout(0.5), 
             #nn.BatchNorm1d(num_features=128),            
@@ -575,17 +579,17 @@ class CNNMini(nn.Module):
 class CNNMiniModel(Model):
     def __init__(self, n_classes, learning_rate):
         model = CNNMini(n_classes)
-        Model.__init__(self, "CNNMiniModel", model, optimizer, loss_func)
+        Model.__init__(self, "CNNMiniModel", model, learning_rate)
 
 class CNNModel(Model):
     def __init__(self, n_classes, learning_rate, neurons=2048):
         model = CNN(n_classes, neurons)
-        Model.__init__(self, "CNNModel", model, optimizer, loss_func)
+        Model.__init__(self, "CNNModel", model, learning_rate)
 
 class CNNGreyModel(Model):
     def __init__(self, n_classes, learning_rate):
         model = CNNGreyscale(n_classes)
-        Model.__init__(self, "CNNGreyModel", model, optimizer, loss_func)
+        Model.__init__(self, "CNNGreyModel", model, learning_rate)
 
 # Creates a bespoke greyscale CNN that was pre-trained on the biomed_self_label_shape dataset; this is meant to be used for transfer learning
 class CellNetBiomedShapeModel(Model):
@@ -593,7 +597,7 @@ class CellNetBiomedShapeModel(Model):
         model = CNNGreyscale(4) 
         model.load_state_dict(torch.load("./CNNGreyModel_biomed_self_label_shape_baseline_0.torch"))
         model.fc[6] = nn.Linear(128, n_classes)
-        Model.__init__(self, "CellNetBiomedShapeModel", model, optimizer, loss_func)
+        Model.__init__(self, "CellNetBiomedShapeModel", model, learning_rate)
 
 # Allows transfer learning from a Vgg16 model tha was trained on the biomed_self_label_shape dataset
 class Vgg16BiomedShapeModel(Model):
@@ -601,7 +605,7 @@ class Vgg16BiomedShapeModel(Model):
         model = VggModelAllLayers(freeze=False, n_classes=4, learning_rate=learning_rate)
         model.model.load_state_dict(torch.load("./VggModelAllLayers_biomed_self_label_shape_baseline_0.torch"))
         model.model.classifier[6][3] = nn.Linear(256, n_classes)
-        Model.__init__(self, "Vgg16BiomedShapeModel", model.model, optimizer, loss_func)
+        Model.__init__(self, "Vgg16BiomedShapeModel", model.model, learning_rate)
 
 # Allows transfer learning from a Vgg16 model tha was trained on the biomed_self_label_shape dataset
 class ResNetCovid19Model3Classes(Model):
@@ -622,7 +626,7 @@ class ResNetCovid19Model3Classes(Model):
         model.conv1 = torch.nn.Conv2d(1, 64, kernel_size=(7, 7), stride=(2, 2), 
                                       padding=(3, 3), bias=False)
         model.fc = torch.nn.Linear(in_features=2048, out_features=n_classes, bias=True) 
-        Model.__init__(self, "ResNetCovid19Model3Classes", model, optimizer, loss_func)
+        Model.__init__(self, "ResNetCovid19Model3Classes", model, learning_rate)
 
 # classifier meant to be used with the huge covid19 images dataset; this dataset contains images with five channels, one for each different
 # treatment of a cell culture with some chemical/drug. We build a classifier below to take a single-channel image, and predict which of the
@@ -645,7 +649,7 @@ class Vgg19OneChannelModelAllLayers(Model):
             nn.Linear(32, n_classes))
         model.classifier[6].out_features = n_classes
 
-        Model.__init__(self, "Vgg19OneChannelModelAllLayers", model, optimizer, loss_func)
+        Model.__init__(self, "Vgg19OneChannelModelAllLayers", model, learning_rate)
 
 # Allows transfer learning from a Vgg19_bn model tha was trained on the covid19 dataset 
 class Vgg19OneChannelModelAllLayersCovid19(Model):
@@ -654,7 +658,7 @@ class Vgg19OneChannelModelAllLayersCovid19(Model):
         model.model.load_state_dict(torch.load(saved_model, map_location=torch.device('cuda')))
         model.model.classifier[6][3] = nn.Linear(32, n_classes)
 
-        Model.__init__(self, "Vgg19OneChannelModelAllLayersCovid19", model.model, optimizer, loss_func)
+        Model.__init__(self, "Vgg19OneChannelModelAllLayersCovid19", model.model, learning_rate)
 
 class Vgg19ThreeChannelModelAllLayers(Model):
     def __init__(self, n_classes, learning_rate, pretrained=True):
@@ -672,4 +676,4 @@ class Vgg19ThreeChannelModelAllLayers(Model):
         
         model.classifier[6].out_features = n_classes
 
-        Model.__init__(self, "Vgg19ThreeChannelModelAllLayers", model, optimizer, loss_func)
+        Model.__init__(self, "Vgg19ThreeChannelModelAllLayers", model, learning_rate)

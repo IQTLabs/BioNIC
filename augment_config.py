@@ -11,60 +11,66 @@ import os
 from torchvision import transforms
 from augmentations import *
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # BASE TRANSFORMATIONS that will be recycled and modified across several datasets
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 resnet_only__malaria_cell_images_baseline_mean = [0.5295, 0.4239, 0.4530]
 resnet_only__malaria_cell_images_baseline_std = [0.3366, 0.2723, 0.2876]
 
 train_transforms_malaria_images_blog1 = [
         transforms.RandomRotation(degrees=90),
-        transforms.ColorJitter(),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.Resize(size=[224,224]),
-        transforms.ToTensor(),
-        transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, resnet_only__malaria_cell_images_baseline_std)]
+	transforms.ColorJitter(),
+	transforms.RandomHorizontalFlip(),
+	transforms.RandomVerticalFlip(),
+	transforms.Resize(size=[224,224]),
+	transforms.ToTensor(),
+	transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, 
+                resnet_only__malaria_cell_images_baseline_std)]
 
 eval_transforms_malaria_images_blog1 = [
-        transforms.Resize(size=[224,224]),
-        transforms.ToTensor(),
-        transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, resnet_only__malaria_cell_images_baseline_std)
-        ]
+	transforms.Resize(size=[224,224]),
+	transforms.ToTensor(),
+	transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, 
+                resnet_only__malaria_cell_images_baseline_std)
+	]
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 train_transforms_malaria_images_fullsize = [
-        transforms.RandomRotation(degrees=90),
-        transforms.ColorJitter(),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, resnet_only__malaria_cell_images_baseline_std)]
+	transforms.RandomRotation(degrees=90),
+	transforms.ColorJitter(),
+	transforms.RandomHorizontalFlip(),
+	transforms.RandomVerticalFlip(),
+	transforms.ToTensor(),
+	transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, 
+                resnet_only__malaria_cell_images_baseline_std)]
 
 eval_transforms_malaria_images_fullsize = [
-        transforms.ToTensor(),
-        transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, resnet_only__malaria_cell_images_baseline_std)
-        ]
+	transforms.ToTensor(),
+	transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, 
+                resnet_only__malaria_cell_images_baseline_std)
+	]
 
 train_transforms_malaria_images_halfsize = [
-        transforms.Resize(size=[500,500]),
-        transforms.RandomRotation(degrees=90),
-        transforms.ColorJitter(),
-        transforms.RandomHorizontalFlip(),
-        transforms.RandomVerticalFlip(),
-        transforms.ToTensor(),
-        transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, resnet_only__malaria_cell_images_baseline_std)]
+	transforms.Resize(size=[500,500]),
+	transforms.RandomRotation(degrees=90),
+	transforms.ColorJitter(),
+	transforms.RandomHorizontalFlip(),
+	transforms.RandomVerticalFlip(),
+	transforms.ToTensor(),
+	transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, 
+                resnet_only__malaria_cell_images_baseline_std)]
 
 eval_transforms_malaria_images_halfsize = [
         transforms.Resize(size=[500,500]),
-        transforms.ToTensor(),
-        transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, resnet_only__malaria_cell_images_baseline_std)
-        ]
+	transforms.ToTensor(),
+	transforms.Normalize(resnet_only__malaria_cell_images_baseline_mean, 
+                resnet_only__malaria_cell_images_baseline_std)
+	]
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # MODEL SPECIFICATIONS for models in blog posts 1 through 3
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 vgg_only__kaggle_baseline_mean = [0.0918, 0.0918, 0.0918]
 vgg_only__kaggle_baseline_std = [0.1675, 0.1675, 0.1675]

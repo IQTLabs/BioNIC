@@ -2,33 +2,20 @@
 optimizing deep learning for ultra-small biomedical datasets 
 
 ## Project description
-This codebase sets up an infrastructure to train and evaluate deep learning models on ultra-small (less than 1000 samples) biomedical imagery datasets. It is meant to be used to triage biomedical images for human inspection, based on the confidence in a prediction.
+This codebase sets up an infrastructure to train and evaluate deep learning models on ultra-small (less than 1000 samples) biomedical imagery datasets. It is meant to be used to triage biomedical images for human inspection, based on the confidence in a prediction. That is, high-confidence predictions by the models can be used directly, while lower-confidence predictions will need to be manually evaluated.
 
 The user is responsible for dividing their images into train, evaluate, and holdout sets, and specifying the configuration parameters of the models. Multiple models can be built off the same training data, and evaluated against one another.
 
 Some of the configuration options include:
 - Choosing transfer learning from other pre-trained models
 - Choosing data augmentations and transformations
-- Choosing the number of CV-folds and repeats
+- Choosing the number of CrossValidation-folds and repeats
 
 Each model that is trained can be run on test data, where images are classified, and then these classifications are output into low and high confidence folders, indicating which ones need human inspection.
 
 ## Requirements
-We use PyTorch, Pillow, and OpenCV libraries for image processing. You will need to install:
-- cudatoolkit               10.1.243
-- image-slicer              0.3.0         
-- imageio                   2.8.0                   
-- matplotlib                3.1.3                      
-- numpy                     1.18.1             
-- opencv3                   3.1.0                  
-- pandas                    1.0.0           
-- pillow                    7.0.0              
-- python                    3.6.10                 
-- pytorch                   1.4.0          
-- scikit-image              0.16.2        
-- scikit-learn              0.22.1          
-- scipy                     1.3.2          
-- torchvision               0.5.0    
+We use PyTorch, Pillow, and OpenCV libraries for image processing. You can view all libraries and/or install them with conda with:
+`conda env create -f bionic.yaml` 
 
 We recommend running this code with a GPU-enabled machine; it takes on the order of 30 minutes to train 10-20 CV-folds of a single model with a GPU.
 
@@ -64,6 +51,7 @@ on GPU 0.
 Finally, you can view the results graphically by specifying the csv of results created above, `dataframe_VggModelAllLayers_kaggle_bowl.csv`, at the top of the second cell in `display_results.iypnb`, which you can run by opening a Jupyter notebook by typing `jupter notebook` in the root directory.
 
 ### Descriptions of included files:
+- `bionic.yaml`: the list of packages you'll need to run this code; you can use conda to install it (see above).
 - `cellnet_config.py`, `augment_config.py`: various config files for different models/experiments we ran. You can add your own models to any of these, or create and import your own config files. 
 - `dataset_prep.py`: basic utilities to do stratified CV splits and/or global holdouts for a dataset where you want to use cross-validation to build and test a model. Also specifies the reporting metric(s), which all attempt to correct for any class imbalances during dataset augmentation and reporting.
 - `augmentations.py`: various dataset transformations that can be used during your dataset preparation; see the file for more details.

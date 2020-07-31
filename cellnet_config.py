@@ -1,7 +1,9 @@
 
 '''
 
-This file is a configuration for the models tested in our fourth blog post; comparing using CellNET to ImageNet transfer learning
+This file is a configuration for the models tested in our fourth blog post; comparing using CellNET to ImageNet transfer learning.
+
+Link to blog post: FIXME
 
 '''
 

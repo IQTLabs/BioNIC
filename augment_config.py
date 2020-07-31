@@ -2,6 +2,8 @@
 
 This file is a configuration for all the models tested in our third blog post; image transformations and pre-processing.
 
+Link to blog post: FIXME
+
 '''
 
 import copy

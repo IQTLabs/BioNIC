@@ -1,21 +1,22 @@
-# #########################################################################################################################################################
+# #####################################################################################################################
 '''
 
 This module provides helper functions for slicing the incoming dataset into train, test, and global holdout.
 It also helps manage the reporting on these different evaluation options.
 
 Typically, you will be running your evaluation on some combination of:
-- Train-test split (is this random from a single folder, or will you have your own train and test folders that are different raw images?)
+- Train-test split (is this random from a single folder, or will you have your own train and test folders that are 
+  different raw images?)
 - Datatset augmentation options chosen for a particular model training
 - Will you be doing cross-validation with a global holdout, or not? How many folds?
 - How many times do you want to train and test a model, to measure stability?
 
-Model performance is evaluated on the weighted accuracy for all labels (so takes class imabalance into account, giving equal weight to all classes in 
-the test set). You may want to change this reporting, depending on your ultimate use case for your model; are false negatives worse than false 
-positives, etc.
+Model performance is evaluated on the weighted accuracy for all labels (so takes class imabalance into account, giving 
+equal weight to all classes in the test set). You may want to change this reporting, depending on your ultimate use 
+case for your model; are false negatives worse than false positives, etc.
 
 '''
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 # PyTorch
 from torchvision import transforms, datasets, models
@@ -35,12 +36,12 @@ from sklearn.metrics import balanced_accuracy_score, accuracy_score, precision_s
 
 DATA_WEIGHT_THRESH = 0.0 # used to evaluate a input purification scheme, VennData (optional)
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # REPORTNG of model results
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-# helper function to calculate the accuracy for each label, which is then averaged across all labels. This function takes class imbalance into account,
-# in that it gives equal weight to every label.
+# helper function to calculate the accuracy for each label, which is then averaged across all labels. This function 
+# takes class imbalance into account, in that it gives equal weight to every label.
 def weighted_accuracy(preds, targets):
 
     # if the model always predicts the same thing, give it a score of zero
@@ -71,15 +72,16 @@ def weighted_accuracy(preds, targets):
 ''' Calculates and records the score of a voting ensemble model of all the individual model predictions in results_df;
     appends the score to aggregateResults.csv
 
-    Useful for cases where you are doing multiple runs of CV with individual and a global holdout test set for the same model,
-    but trained and tested on different subsets of the dataset (exclusive of the global holdout).
+    Useful for cases where you are doing multiple runs of CV with individual and a global holdout test set for the same 
+    model, but trained and tested on different subsets of the dataset (exclusive of the global holdout).
 
     Writes the following files:
     - results{modelName}_{traindir}.csv : all results on all CV sets for that model+traindir
     - {aggregateResults}.txt.result : all results on all CV sets for that model+traindir, plus voting ensemble score
 
     Arguments:
-    - results_df: a df which stores the target labels, and the predictions of the individual CV models, for the global holdout
+    - results_df: a df which stores the target labels, and the predictions of the individual CV models, for the global 
+        holdout
     - name: whatever meaningful string you named your model with
     - model_options: the dict of model options, such as traindir and model class type, etc.
     - aggregateResults: the name for the {aggregateResults}.csv file where we will append the voting results
@@ -139,7 +141,8 @@ def scoreResults(results_df, name, model_options, aggregateResults, holdout_conf
     if write_file:
         # append the voting model scores to the aggregate results for this model CV experiment
         file = open(aggregateResults, "a+")
-        file.write(model_options['traindir'] + "," + model_options['name'] + "_voting,holdout," + str(weighted) + "," + str(datetime.now()) + "\n")
+        file.write(model_options['traindir'] + "," + model_options['name'] + "_voting,holdout," + str(weighted) + "," + \
+            str(datetime.now()) + "\n")
         file.close()
 
         file = open(aggregateResults+".holdout_confidences.txt", "w")
@@ -148,26 +151,30 @@ def scoreResults(results_df, name, model_options, aggregateResults, holdout_conf
         file.close()
 
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # SLICE AND DICE THE INCOMING DATASET into an appropriate train-and-test split
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-# removes hidden files (starting with .) from a list of filenames (filenames_list)
 def clean(filenames_list):
+    """ removes hidden files (starting with .) from a list of filenames """
     result = []
     for l in filenames_list:
         if l[0] != '.':
             result.append(l)
     return result
 
-''' Collects inputs that are above a threshold for VennData in cases when we don't use cross-validation (cross-validation datasets are handled in makeCVFolders 
-    for VennData).
+
+def makeVennDataTraindir(model_options):
+    """ Collects inputs that are above a threshold for VennData in cases when we don't use cross-validation 
+        (cross-validation datasets are handled in makeCVFolders for VennData).
 
     VennData is a weighting scheme for the training inputs, calculated elsewhere.
 
-    Takes as argument the model_options dictionary.
-'''
-def makeVennDataTraindir(model_options):
+    Args:
+        model_options: a dictionary of model options specified in the *_config.py file for the model you're using.
+
+    """
+
     # if we're not using VennData, just return the normal, unweighted images in the training directory
     if 'venn_data' not in model_options.keys():
         traindir = model_options['traindir']
@@ -188,7 +195,8 @@ def makeVennDataTraindir(model_options):
                 weight = float(weight)
                 if weight >= DATA_WEIGHT_THRESH:
                     if label_local == label:
-                        os.system("cp " + model_options['traindir'] + "/" + label + "/" + image + " " + model_options['traindir'] + "_venn_data/" + label + "/" + image)
+                        os.system("cp " + model_options['traindir'] + "/" + label + "/" + image + " " + \
+                            model_options['traindir'] + "_venn_data/" + label + "/" + image)
                         ctr += 1
         data_weights.close()
         traindir = model_options['traindir'] + "_venn_data"
@@ -201,15 +209,20 @@ def makeVennDataTraindir(model_options):
         model_options['venn_length'] = ctr
     return traindir
 
-''' For a given directory, creates a global holdout test set that will not be used in any train nor test fold of CV for a model setup in makeCVFolders().
-    Creates sub-folders for every individual class/label, to be used with torchvision.datasets.ImageFolder
-
-    Useful to get an idea of generalization, model stability, and needed to evaluate a voting ensemble model. Note, we don't bother with
-    a validation set (just train, test, and global holdout) when we are running these experiments, as we are not fine-tuning any model.
-
-    Takes as argument the model_options dictionary.
-'''
 def makeGlobalHoldout(model_options):
+    """ For a given directory, creates a global holdout test set that will not be used in any train nor test fold of CV
+        for a model setup in makeCVFolders(). Creates sub-folders for every individual class/label, to be used with 
+        torchvision.datasets.ImageFolder.
+
+        Useful to get an idea of generalization, model stability, and needed to evaluate a voting ensemble model. Note, 
+        we don't bother with a validation set (just train, test, and global holdout) when we are running these 
+        experiments, as we are not fine-tuning any model.
+
+    Args:
+        model_options: a dictionary of model options specified in the *_config.py file for the model you're using.
+
+    """
+
     # prepare the directory structure for the global holdout
     traindir = model_options['traindir']
     testdir_normal = "./HOLDOUT_" + model_options['traindir']
@@ -218,7 +231,8 @@ def makeGlobalHoldout(model_options):
         os.system("rm -r " + testdir_normal)
     os.system("mkdir " + testdir_normal)
 
-    # goes through all the possible classes (labels) and randomly splits each class into build vs holdout datasets, writing to disk
+    # goes through all the possible classes (labels) and randomly splits each class into build vs holdout datasets, 
+    # writing to disk
     labels = model_options['labels']
     for label in clean(labels):
         files = clean(os.listdir(traindir + "/" + label))
@@ -235,20 +249,21 @@ def makeGlobalHoldout(model_options):
             print(file)
             os.system("cp ./" + traindir + "/" + label + "/" +  file + " " + testdir_normal + "/" + label + "/" + file)
 
-''' Divides a directory into N cross-validation folds of equal size, and then creates N train-and-test directory pairs of images.
-    Creates sub-folders for every individual class/label, to be used with torchvision.datasets.ImageFolder.
-    Assumes you have already used the function above to create a global holdout.
-
-    Useful for cases where you are doing multiple runs of CV with individual and a global holdout test set for the same model,
-    but trained and tested on different subsets of the dataset (exclusive of the global holdout).
-
-    Arguments:
-    - datadir: the path to the directory to split into folds
-    - numFolds: how many folds you want for cross-validation
-    - model_options: dictionary of configs for the model, including what the possible labels are and whether or not you want to use VennData
-      to train on a purified input dataset
-'''
 def makeCVFolders(datadir, numFolds, model_options):
+    """ Divides a directory into N cross-validation folds of equal size, and then creates N train-and-test directory 
+        pairs of images. Creates sub-folders for every individual class/label, to be used with 
+        torchvision.datasets.ImageFolder. Assumes you have already used the function above to create a global holdout.
+
+        Useful for cases where you are doing multiple runs of CV with individual and a global holdout test set for 
+        the same model, but trained and tested on different subsets of the dataset (exclusive of the global holdout).
+
+    Args:
+        datadir:  the path to the directory to split into folds
+        numFolds: how many folds you want for cross-validation
+        model_options: dictionary of configs for the model, including what the possible labels are and whether or not 
+        you want to use VennData to train on a purified input dataset
+    """
+
     # prepare the directories for the folds
     for i in list(range(numFolds)):
         if os.path.exists('TEST_' + str(i)):
@@ -320,9 +335,15 @@ def makeCVFolders(datadir, numFolds, model_options):
         print("VennData length of " + datadir + " training dataset:", ctr)
         model_options['venn_length'] = ctr
 
+def make_weights_for_balanced_classes(images, nclasses):  
+    """ Calculates weights to be passed to torch.utils.data.sampler.WeightedRandomSampler when training to help with 
+        class imbalance issues
 
-# Calculates weights to be passed to torch.utils.data.sampler.WeightedRandomSampler when training to help with class imbalance issues
-def make_weights_for_balanced_classes(images, nclasses):                        
+    Args:
+        images: ImageFolderWithPaths.imgs from your training dataset
+        nclasses: len(ImageFolderWithPaths.classes); the numbr of labels you have in this classification problem
+    """  
+
     count = [0] * nclasses                                                      
     for item in images:                                                         
         count[item[1]] += 1                                                     
@@ -335,10 +356,13 @@ def make_weights_for_balanced_classes(images, nclasses):
         weight[idx] = weight_per_class[val[1]]                                  
     return weight  
 
-# allow us to pass the name of the image in to the dataloader, so we can pull these when calculating confidence scores
 class ImageFolderWithPaths(datasets.ImageFolder):
-    # override the __getitem__ method. this is the method that dataloader calls
+    """ allow us to pass the name of the image in to the dataloader, so we can pull these when calculating confidence 
+        scores """
+
     def __getitem__(self, index):
+        """ # override the __getitem__ method. this is the method that dataloader calls """
+
         # this is what ImageFolder normally returns 
         original_tuple = super(ImageFolderWithPaths, self).__getitem__(index)
         # the image file path

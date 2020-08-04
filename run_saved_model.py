@@ -1,12 +1,12 @@
-# #########################################################################################################################################################
+# #####################################################################################################################
 '''
 
-This module is used to run a saved model, defined in a config file (such as augment_config.py), and stores its predictions and confidences in 
-a csv file for analysis.
+This module is used to run a saved model, defined in a config file (such as augment_config.py), and stores its 
+predictions and confidences in a csv file for analysis.
 
 
 '''
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 
 # PyTorch
@@ -31,11 +31,11 @@ from dataset_prep import *
 from augment_config import *
 from cellnet_config import *
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # BASIC CONFIGURATION
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-CONFIDENCE_THRESH = 0.85 # what you want to set the confidence level to, to as a split for low versus high confidence predictions
+CONFIDENCE_THRESH = 0.85 # what you want to set the confidence to, to split for low versus high confidence predictions
 
 batch_size = 32
 learning_rate = 1e-4 # just needed to pass to our ctor, it will be ignored because we're not training
@@ -51,9 +51,9 @@ print("starting, using GPU " + str(gpu_num) + "...")
 model = eval(sys.argv[2])
 
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # RUN A PREVIOUSLY TRAINED MODEL
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 print("testing a saved model...")
 neurons = eval(model['model'])
@@ -68,7 +68,8 @@ while os.path.exists("./" + model['name'] + "_" + str(counter) + ".torch"):
 	if model['holdout'] == False:
 		model['holdout'] = model['saved_holdout']
 	holdout_normal = ImageFolderWithPaths(root=model['holdout'], transform=transforms.Compose(model['eval_transforms']))
-	all_preds, all_targets, confidences, paths = neurons.test(DataLoader(holdout_normal, batch_size=batch_size, shuffle=False), device, model, None, "loaded")
+	all_preds, all_targets, confidences, paths = neurons.test(DataLoader(holdout_normal, batch_size=batch_size, shuffle=False), 
+		device, model, None, "loaded")
 	results_normal['target'] = all_targets
 	results_normal['preds_' + str(counter)] = all_preds
 	confidence_mapping = zip(paths, confidences, all_preds, all_targets)
@@ -104,22 +105,26 @@ df_low_bad = df_low[df_low['goal'] == 0]
 
 # print out the performance of the models, based on confidence in predidctions
 if len(df_high_yes) != 0:
-	print("Correctly matched high confidence usable: " + str(sum(df_high_yes['matched']) * 1.0 / len(df_high_yes)) + " out of " + str(len(df_high_yes)))
+	print("Correctly matched high confidence usable: " + str(sum(df_high_yes['matched']) * 1.0 / len(df_high_yes)) + \
+	 " out of " + str(len(df_high_yes)))
 else:
 	print("Correctly matched high confidence usable: N/A out of 0")
 
 if len(df_high_bad) != 0:
-	print("Correctly matched high confidence un-usable: " + str(sum(df_high_bad['matched']) * 1.0 / len(df_high_bad)) + " out of " + str(len(df_high_bad)))
+	print("Correctly matched high confidence un-usable: " + str(sum(df_high_bad['matched']) * 1.0 / len(df_high_bad)) + \
+		" out of " + str(len(df_high_bad)))
 else:
 	print("Correctly matched high confidence un-usable: N/A out of 0")
 
 if len(df_low_yes) != 0:
-	print("Correctly matched low confidence usable: " + str(sum(df_low_yes['matched']) * 1.0 / len(df_low_yes)) + " out of " + str(len(df_low_yes)))
+	print("Correctly matched low confidence usable: " + str(sum(df_low_yes['matched']) * 1.0 / len(df_low_yes)) + \
+		" out of " + str(len(df_low_yes)))
 else:
 	print("Correctly matched low confidence usable: N/A out of 0")
 
 if len(df_low_bad) != 0:
-	print("Correctly matched low confidence un-usable: " + str(sum(df_low_bad['matched']) * 1.0 / len(df_low_bad)) + " out of " + str(len(df_low_bad)))
+	print("Correctly matched low confidence un-usable: " + str(sum(df_low_bad['matched']) * 1.0 / len(df_low_bad)) + \
+		" out of " + str(len(df_low_bad)))
 else:
 	print("Correctly matched low confidence un-usable: N/A out of 0")
 print("DONE.")

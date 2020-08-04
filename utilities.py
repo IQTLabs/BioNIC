@@ -1,4 +1,4 @@
-# #########################################################################################################################################################
+# #####################################################################################################################
 '''
 
 This file is a scratchpad of code used for preparing the folders of the dataset, including:
@@ -8,7 +8,7 @@ This file is a scratchpad of code used for preparing the folders of the dataset,
 
 
 '''
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 # Data science tools
 import os
@@ -22,11 +22,9 @@ import torchvision.transforms.functional as F
 # local libraries
 from dataset_prep import clean
 
-# #########################################################################################################################################################
-# Inverting a greyscale image
-# #########################################################################################################################################################
-
 class Invert(object):	
+	""" Inverting a greyscale image """
+
 	def invert(self, img):
 		if not F._is_pil_image(img):
 			raise TypeError('img should be PIL Image. Got {}'.format(type(img)))
@@ -52,6 +50,8 @@ class Invert(object):
 		return self.__class__.__name__ + '()'
 
 def invert(file_dir):
+	""" Inverts all the images in the specified directory (so you can change cells to be on a black background, 
+		instead of white background, for example) """
 	inv = Invert()
 	files = os.listdir(file_dir)
 
@@ -70,10 +70,14 @@ def invert(file_dir):
 
 #invert("/home/kdobolyi/cellnet/malaria_cell_images/Parasitized/")
 
-# #########################################################################################################################################################
-# getting random files into a folder
-# #########################################################################################################################################################
 def createRandomSubset(root, size):
+	""" Places random files into a new folder, <root>_subset_<size> 
+
+		Arguments:
+			root: the source folder of all the images, which has a subfolder for each label (like ImageFolder)
+			size: what the size of the random subset should be
+
+	"""
 
 	mini = root + "_subset_" + str(size)
 	if os.path.exists(mini):

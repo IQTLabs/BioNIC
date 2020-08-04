@@ -1,10 +1,10 @@
-# #########################################################################################################################################################
+# #####################################################################################################################
 '''
 
 Builds CellNET models from the hundred thousand covid19 images from https://www.rxrx.ai/rxrx19
 
 '''
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 # PyTorch
 from torchvision import datasets, models
@@ -25,24 +25,18 @@ from models import *
 from dataset_prep import *
 from augmentations import *
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # BASIC CONFIGURATION
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 batch_size = 8
-epochs = 10
+epochs = 2
 DATASET_SIZE = 50000
-learning_rate = 1e-4
+learning_rate = 1e-3
 scoring = "_" + str(epochs) + "epochs_lr" + str(learning_rate).replace("0.", "_") 
 device = "cuda"
 
-calcStats = False       # turn this on if you want to calc mean and stddev of training dataset for normalization in transform
-
-# used with calcStats to calculate the mean and stddev of the greyscale images for later normalization; you may need to update this for your dataset
-stats_transforms = [
-                    transforms.Grayscale(),
-                    transforms.Resize([380,380]),
-                    transforms.ToTensor()]
+calcStats = False # turn this on if you want to calc mean and stddev of training dataset for normalization in transform
 
 # choose a GPU from the command line arguments
 gpu_num = int(sys.argv[1])
@@ -53,39 +47,46 @@ else:
     device = "cpu"
     print("starting, using CPU")
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # DATASET PREP
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-# a custom class for the covid19 dataset
 class RxRxDataset(Dataset):
-    def __init__(self, df=None, data_path = '/mnt/fs03/shared/datasets/RxRx19/RxRx19a/images', train=False, size=380):
+    """ custom class for the covid19 dataset """
+    def __init__(self, df=None, data_path = '/mnt/fs03/shared/datasets/RxRx19/RxRx19a/images', prep='train', size=224):
         assert df is not None, 'No df'
         self.df = df
         self.data_path = data_path
 
-        if train:
+        if prep == 'train':
             self.transform = transforms.Compose([
-                #RGB(),
+                RGB(),
                 transforms.RandomRotation(degrees=90),
                 transforms.ColorJitter(),
                 transforms.RandomHorizontalFlip(),
                 transforms.RandomVerticalFlip(),
-                Grayscale(),
+                #Grayscale(),
                 transforms.Resize(size=[size,size]),
                 transforms.ToTensor(),
-                #transforms.Normalize([2.3584, 2.3584, 2.3584], [0.0913, 0.0913, 0.0913])
-                transforms.Normalize([-25.1580], [0.5144])
+                #transforms.Normalize([0.0628, 0.0628, 0.0628], [0.0476, 0.0476, 0.0476])
+                transforms.Normalize([0.0613], [0.0471])
             ])
+        elif prep == 'test':
+            self.transform = transforms.Compose([
+                RGB(),
+                #Grayscale(),
+                transforms.Resize(size=[size,size]),
+                transforms.ToTensor(),
+                #transforms.Normalize([0.0628, 0.0628, 0.0628], [0.0476, 0.0476, 0.0476])
+                transforms.Normalize([0.0613], [0.0471])
+            ])      
         else:
             self.transform = transforms.Compose([
-                #RGB(),
-                Grayscale(),
+                RGB(),
+                #Grayscale(),
                 transforms.Resize(size=[size,size]),
                 transforms.ToTensor(),
-                #transforms.Normalize([2.3584, 2.3584, 2.3584], [0.0913, 0.0913, 0.0913])
-                transforms.Normalize([-25.1580], [0.5144])
-            ])        
+            ])            
             
             
     def __getitem__(self, idx):
@@ -103,8 +104,8 @@ class RxRxDataset(Dataset):
     def __len__(self):
         return len(self.df)
 
-# see if the file in the dataframe actually exists in the directory
 def checkFile(experiment, plate, well, site, channel):
+    """ see if the file in the dataframe actually exists in the directory using fields from the metadata for this dataset """
     data_path = '/mnt/fs03/shared/datasets/RxRx19/RxRx19a/images'
     file = '{}/{}/Plate{}/{}_s{}_w{}.png'.format(data_path, 
                                                 experiment,
@@ -122,8 +123,9 @@ def checkFile(experiment, plate, well, site, channel):
 df = pandas.read_csv("./metadata.csv")
 #df = df.sample(frac=0.5)
 
-# convert the dataframe into a dataframe with metadata where each image of five channels becomes five images of a single channel;
-# this will be what we predict (which channel the image comes from). Hopefully useful for transfer learning from B&W datasets
+# convert the dataframe into a dataframe with metadata where each image of five channels becomes five images of a 
+# single channel; this will be what we predict (which channel the image comes from). Hopefully useful for transfer 
+# learning from B&W datasets
 experiment = list(df['experiment'])
 plate = list(df['plate'])
 well = list(df['well'])
@@ -149,11 +151,12 @@ df = pandas.read_csv("valid_covid19_images.csv")
 df = df.sample(n = DATASET_SIZE)
 print("length of DataFrame: ", len(df))
 
-# set the test-train group for each image (TODO: this is not really random)
 def group(x):
-    if x <= 3:
+    """ set the test-train group for each image """
+    rand = random.randint(1, 10)
+    if x == 10:
         return "holdout"
-    elif x >= 25:
+    elif x == 9:
         return "eval"
     else:
         return "train"
@@ -164,17 +167,17 @@ df_holdout = df[df['group'] == 'holdout']
 df_train = df[df['group'] == 'train']
 
 # create the datasets for training, test, and holdout
-print("creating training dataset...")
-train_dataset = RxRxDataset(df=df_train)
-print("creating eval dataset...")
-eval_dataset = RxRxDataset(df=df_eval, train=False)
-print("creating holdout dataset...")
-holdout_dataset = RxRxDataset(df=df_holdout, train=False)
+print("creating training dataset...", len(df_train))
+train_dataset = RxRxDataset(df=df_train, prep='train')
+print("creating eval dataset...", len(df_eval))
+eval_dataset = RxRxDataset(df=df_eval, prep='test')
+print("creating holdout dataset...", len(df_holdout))
+holdout_dataset = RxRxDataset(df=df_holdout, prep='test')
 
 # find the mean and stddev for the training data, and quit, so these can be manually copied into the config file
 if calcStats:
     print('calculating stats')
-    loader = DataLoader(train_dataset, batch_size=batch_size, num_workers=0, shuffle=False)
+    loader = DataLoader(RxRxDataset(df=df_train, prep='stats'), batch_size=batch_size, num_workers=0, shuffle=False)
     getMeanStddev(loader)
 
 # Dataloader iterators; each should use certain plates only
@@ -185,11 +188,12 @@ dataloaders['holdout'] = DataLoader(holdout_dataset, batch_size=batch_size, shuf
 
 # train and test the model
 print("training model...")
+#neurons = CNNGreyModel(n_classes=5, learning_rate=learning_rate)
 #neurons = ResNet18ModelAllLayers(n_classes=4, learning_rate=learning_rate)
-neurons = Vgg19OneChannelModelAllLayers(n_classes=5, learning_rate=learning_rate, pretrained=False)
-#neurons = Vgg19ThreeChannelModelAllLayers(n_classes=5, learning_rate=learning_rate, pretrained=True)
+#neurons = Vgg19OneChannelModelAllLayers(n_classes=5, learning_rate=learning_rate, pretrained=False)
+neurons = Vgg19ThreeChannelModelAllLayers(n_classes=5, learning_rate=learning_rate, pretrained=True)
 #neurons.model.load_state_dict(torch.load("./cellnet_vgg19_rotations_covid_noImageNet.torch"))
-model_options = {'name':'cellnet_vgg19_1channel_rotations_covid_withoutImageNet_' + str(DATASET_SIZE) + 'samples'}
+model_options = {'name':'cellnet_Vgg19_3channel_rotations_covid_withImageNet' + str(DATASET_SIZE) + 'samples'}
 model_options['file_label'] = scoring
 neurons.train(dataloaders['train'], dataloaders['eval'], epochs, device, model_options)
 neurons.test(dataloaders['eval'], device, model_options, None, "test")
@@ -198,6 +202,14 @@ neurons.test(dataloaders['eval'], device, model_options, None, "test")
 print("testing model on holdout...")
 all_preds, all_targets, confidences, paths = neurons.test(dataloaders['holdout'], device, model_options, None, "holdout")
 print("Weighted accuracy holdout: " + str(weighted_accuracy(all_preds, all_targets)))
+
+'''
+0.995: CNNGrey
+0.96: vgg19Grey_wImagenet
+0.997: vgg19Grey_withoutImagenet
+0.992: vgg19RGB_withImagenet
+0.985: vgg19RGB_withoutImagenet
+'''
 
 
 

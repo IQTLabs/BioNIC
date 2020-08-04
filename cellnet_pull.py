@@ -1,14 +1,15 @@
-# #########################################################################################################################################################
+# #####################################################################################################################
 '''
 
 Builds CellNET dataset from the hundred thousand covid19 images from https://www.rxrx.ai/rxrx19
 
-The original dataset has five channels for each image (one for each treatment of the cells with a chemical). Here, we convert each channel into its own label,
-and for any image from any channel, try to predict which channel it belongs to (what kind of chemical treatment the image is showing). We can then try
-to use this huge dataset of single-channel images for 5-label classification tasks.
+The original dataset has five channels for each image (one for each treatment of the cells with a chemical). Here, we 
+convert each channel into its own label, and for any image from any channel, try to predict which channel it belongs 
+to (what kind of chemical treatment the image is showing). We can then try to use this huge dataset of single-channel 
+images for 5-label classification tasks.
 
 '''
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 # PyTorch
 from torchvision import datasets, models
@@ -30,10 +31,12 @@ from dataset_prep import *
 from augmentations import *
 
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-# see if the file in the dataframe actually exists in the directory
 def checkFile(experiment, plate, well, site, channel):
+    """ See if the file in the dataframe actually exists in the directory, using elements from the DataFrame that was 
+        generated from the dataset metadata """
+
     data_path = '/mnt/fs03/shared/datasets/RxRx19/RxRx19a/images'
     file = '{}/{}/Plate{}/{}_s{}_w{}.png'.format(data_path, 
                                                 experiment,
@@ -51,8 +54,9 @@ def checkFile(experiment, plate, well, site, channel):
 df = pandas.read_csv("./metadata.csv")
 #df = df.sample(frac=0.5)
 
-# convert the dataframe into a dataframe with metadata where each image of five channels becomes five images of a single channel;
-# this will be what we predict (which channel the image comes from). Hopefully useful for transfer learning from B&W datasets
+# convert the dataframe into a dataframe with metadata where each image of five channels becomes five images of a 
+# single channel; this will be what we predict (which channel the image comes from). Hopefully useful for transfer 
+# learning from B&W datasets
 experiment = list(df['experiment'])
 plate = list(df['plate'])
 well = list(df['well'])
@@ -88,6 +92,7 @@ os.system("mkdir covid_mini/ch4")
 os.system("mkdir covid_mini/ch5")
 
 def getFile(df, idx):
+    """ retrieves and individual image by the id from the dataframe that stores all images """
     path = '/mnt/fs03/shared/datasets/RxRx19/RxRx19a/images'
     entry = df.iloc[idx]
     file = '{}/{}/Plate{}/{}_s{}_w{}.png'.format(path, 

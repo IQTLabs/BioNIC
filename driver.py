@@ -1,6 +1,7 @@
 '''
 
-This file will run one or more models specified in any of tbe config files, save the results, and place the images by confidence in low and high directories.
+This file will run one or more models specified in any of tbe config files, save the results, and place the images by 
+confidence in low and high directories.
 
 '''
 import os
@@ -10,9 +11,13 @@ from subprocess import Popen, PIPE, STDOUT
 gpu = "0"
 confidence_threshold = 0.8
 
-# which model(s) do you want to run? 
-# the True flag will re-create the holdout, while False will not -- we recommend that you only set it to True for the first model in a series of experiments
-# where you want to compare different models on the same holdout dataset
+""" List of which model(s) do you want to run? The models have all been specified in your *_config.py files
+	The True flag will re-create the holdout, while False will not -- we recommend that you only set it to True for 
+	the first model in a series of experiments where you want to compare different models on the same holdout dataset.
+
+	For readability, the groupings below are for each individual dataset that you'd want to try to build and evaluate 
+	different models for.
+"""
 models_to_run = [ 	
 					#"biomed_transfer_CNN True",
 
@@ -34,7 +39,6 @@ models_to_run = [
 					#"vgg_only__biomed_self_label_shape_erode False",
 					#"vgg_only__biomed_self_label_shape_LBP False"
 
-					# need to redo all of these, because you messed up on resize vs crop, and everything should be BN
 					#"vgg_only__kaggle_blog1 False",
 					#"vgg_lower__kaggle_blog1 False",
 					#"resnet_only__kaggle_blog1 False",
@@ -59,11 +63,16 @@ models_to_run = [
 					#"vgg_covid19_only__kaggle_blog1 False",
 					#"vgg19_pretrained_only__kaggle_blog1 False",
 					#"vgg16BN_pretrained_only__kaggle_blog1 False",
-					#"vgg_1channel_covid19_noImageNet__kaggle_blog1 False",
-					#"vgg_1channel_covid19_withImageNet__kaggle_blog1 False",
-					"vgg_1channel_withImageNet_only__kaggle_blog1 False"
+					#"vgg_1channel_covid19_noImageNet__kaggle_blog3 False",
+					#"vgg_1channel_covid19_withImageNet__kaggle_blog3 False",
+					#"vgg_1channel_withImageNet_only__kaggle_blog3 False",
+					"vgg_1channel_noImageNet_only__kaggle_blog3 False",
+					#"vgg_3channel_covid19_noImageNet__kaggle_blog3 False",
+					#"vgg_3channel_covid19_withImageNet__kaggle_blog3 False",
+					#"vgg_3channel_withImageNet_only__kaggle_blog3 False",
+					#"vgg_3channel_noImageNet_only__kaggle_blog3 False",
+					#"cnn_grey_covid19_only__kaggle_blog3 False"
 
-					# for all datasets, you need to redo the ones that are uncommented below, because you were not use BN (used dropout instead and resnet didn't work)
 					#"resnet_only__malaria_cell_images_blog1 False",
 					#"resnet_lower__malaria_cell_images_blog1 False",
 					#"vgg_only__malaria_cell_images_blog1 False",
@@ -275,7 +284,8 @@ for file in files:
 	data = file.readlines()
 	file.close()
 
-	# move images into high and low confidence folders, where labels have been changed to make inspection easier (did we predict correctly or not?)
+	# move images into high and low confidence folders, where labels have been changed to make inspection easier (did 
+	# we predict correctly or not?)
 	for d in data:
 		if len(d) == 5:
 			d = d.split(',')
@@ -284,7 +294,9 @@ for file in files:
 			pred = d[4].rstrip()[1:]
 			target = d[5].rstrip()[1:-1]
 			if confidence >= confidence_threshold:
-				os.system("cp " + filename + " ./" + handle + "/high_confidence/" + filename.split("/")[-1].split(".")[0] + "_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
+				os.system("cp " + filename + " ./" + handle + "/high_confidence/" + filename.split("/")[-1].split(".")[0] + \
+					"_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
 			else:
-				os.system("cp " + filename + " ./" + handle + "/low_confidence/" + filename.split("/")[-1].split(".")[0] + "_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
+				os.system("cp " + filename + " ./" + handle + "/low_confidence/" + filename.split("/")[-1].split(".")[0] + \
+					"_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
 

@@ -1,17 +1,17 @@
-# #########################################################################################################################################################
+# #####################################################################################################################
 ''' 
 
-This module provides various models that can be used for biomedical images, as well as code to run train and test calls on each epoch. It contains the
-basic train and test methods called on any model type in this codebase.
+This module provides various models that can be used for biomedical images, as well as code to run train and test calls 
+on each epoch. It contains the basic train and test methods called on any model type in this codebase.
 
 Different types of models are available:
 - different transfer learning options from ImageNet (vgg-s ResNet-s)
 - transfer learning from COVID19 datasets
 - CNN models built from scratch
-- Localized Binary Pattern based models
+- Localized Binary Pattern based models 
 
 '''
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 # PyTorch
 from torchvision import models
@@ -34,20 +34,29 @@ from dataset_prep import weighted_accuracy
 
 PRINT_ACTIVATIONS = False # see line 63 to adjust for architecture; used to print out activations for a blog post
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # BASE CLASS with train and test
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-# used with PRINT_ACTIVATIONS if we want to do so for a single image (to include in a blog post)
 activation = {}
 def get_activation(name):
+    """ used with PRINT_ACTIVATIONS if we want to do so for a single image (to include in a blog post) """
     def hook(model, input, output):
         activation[name] = output 
     return hook
 
-# the base model class used in all our experiments
 class Model():
+    """ the base model class used in all our experiments """
+
     def __init__(self, name, model, learning_rate, optimizer='adam', loss_func=nn.CrossEntropyLoss()):
+        """ 
+        Args:
+            name: a human-readable name for your model
+            model: the actual model object, e.g. torchvision.models.resnet18(pretrained=True)
+            learning_rate: learning rate used in your optimizer
+            optimizer: a string flag to use optim.Adam, otherwise your actual optimizer object
+            loss_func: whatever loss function you choose, default is cross entropy
+        """
         self.name = name
         self.model = model
 
@@ -64,8 +73,18 @@ class Model():
         if cuda.is_available():
             self.model = self.model.to('cuda')
 
-    # train, and optionally validate, a model
     def train(self, train_loader, val_loader, epochs, device, model_options, versionNum=''):
+        """ train, and optionally validate, a model 
+
+        Args:
+            train_loader: DataLoader with your training images
+            val_loader: DataLoader with your validation images, or None
+            epochs: number of epochs to train your model
+            device: should be "cuda" or "cpu"
+            model_options: a dict of model options you specified in yout *_config.py file
+            versionNum: optional human-readable string to add in to your .torch filename generated here
+        """
+
         self.model.to(device)
 
         #https://discuss.pytorch.org/t/visualize-feature-map/29597/2
@@ -120,7 +139,8 @@ class Model():
 
             training_loss /= len(train_loader.dataset)
 
-            # note: we sometimes are skipping validation, to save data/time, and because we're not fine-tuning models in our experiments
+            # note: we sometimes are skipping validation, to save data/time, and because we're not fine-tuning models in 
+            # our experiments
             if val_loader != None:
                 num_correct = 0
                 num_examples = 1
@@ -148,11 +168,13 @@ class Model():
                     all_preds.extend(predicted)
                     ctr += 1
                 valid_loss /= len(val_loader.dataset)
-                result = 'Epoch: {}, Training Loss: {:.2f},Validation Loss: {:.2f}, accuracy = {:.2f}, weighted accuracy on valid: {:.2f}'.format(epoch, training_loss, valid_loss, num_correct / num_examples, balanced_accuracy_score(all_preds, all_targets))
+                result = 'Epoch: {}, Training Loss: {:.2f},Validation Loss: {:.2f}, accuracy = {:.2f}, weighted accuracy on valid: {:.2f}'.format(epoch, training_loss, valid_loss, num_correct / num_examples, 
+                    balanced_accuracy_score(all_preds, all_targets))
             
             else:
                 valid_loss = 0.0
-                result = 'Epoch: {}, Training Loss: {:.2f},Validation Loss: {:.2f}, accuracy = {:.2f}, weighted accuracy on train: {:.2f}'.format(epoch, training_loss, valid_loss, num_correct / num_examples, balanced_accuracy_score(all_preds, all_targets))
+                result = 'Epoch: {}, Training Loss: {:.2f},Validation Loss: {:.2f}, accuracy = {:.2f}, weighted accuracy on train: {:.2f}'.format(epoch, training_loss, valid_loss, num_correct / num_examples, 
+                    balanced_accuracy_score(all_preds, all_targets))
                 curve.write(str(epoch)+","+str(training_loss)+","+str(balanced_accuracy_score(all_preds, all_targets))+"\n")
 
             # if we set the scheduler above, we need to update it
@@ -164,8 +186,25 @@ class Model():
             print(type(self.model))
         curve.close()
 
-    # test a model that has been trained
-    def test(self, testloader, device, model_options, aggregateResults, test_group, augment=''):
+    def test(self, testloader, device, model_options, aggregateResults, test_group):
+        """ test a model that has been trained, to return predictions
+
+        Args:
+            testloader: DataLoader with your test images; should also contain the paths to the images (ImageFolderWithPaths)
+            device: should be "cuda" or "cpu"
+            model_options: a dict of model options you specified in yout *_config.py file
+            aggregateResults: filename of place to store results for each test, or None
+            test_group: specifies either 'test' (unique to each CVfold) or 'holdout' (stays the same across all CVfolds) 
+                in the outgoing DataFrame we create below
+
+        Returns:
+            all_preds: all the predicted labels for this test set 
+            all_targets: all the target labels for this test set
+            all_confidences: the confidences of each prediction
+            all_paths: the file path of the image of each prediction
+
+        """
+
         self.model.eval() # put the model in eval mode (so it's not going to learn)
 
         with torch.no_grad():
@@ -223,7 +262,8 @@ class Model():
 
             print(confusion_matrix(all_preds, all_targets))
 
-            # calculate and print the metrics we care about -- force the metric to be zero if the model always predicts the same thing (bad model)
+            # calculate and print the metrics we care about -- force the metric to be zero if the model always predicts 
+            # the same thing (bad model)
             if len(set(all_preds)) != 1:
                 weighted = weighted_accuracy(all_preds, all_targets)
                 #print("test accuracy: " + str(num_correct * 1.0 / num_examples))
@@ -238,35 +278,38 @@ class Model():
             # append the results to our logging
             if aggregateResults != None:
                 file = open(aggregateResults, "a+")
-                file.write(model_options['traindir'] + "," + model_options['name'] + "," + test_group + "," + str(weighted) + "," + str(datetime.now()) + "\n")
+                file.write(model_options['traindir'] + "," + model_options['name'] + "," + test_group + "," +  \
+                    str(weighted) + "," + str(datetime.now()) + "\n")
                 file.close()
                 print("saved results to " + aggregateResults)
 
         # return the results to store in the main code for this test, so we can use that to calculate a vote later
         return all_preds, all_targets, all_confidences, all_paths
 
-    # predict for a single image; used to print out activations for that image to include in blog posts
     def predict(self, input):
+        """ # predict for a single image; used to print out activations for that image to include in blog posts """
         output = self.model(inputs)
 
-    # returns the number of trainable parameters, so we can report this in our blog posts when comparing models
     def count_parameters(self):
+        """ returns the number of trainable parameters, so we can report this in our blog posts when comparing 
+            models """
         return sum(p.numel() for p in self.model.parameters() if p.requires_grad)
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # TRANSFER LEARNING base classes
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-# an identity layer, used to "get rid of" layers in our ImageNet models that we don't want to use; it just passes the data forward
 class Identity(nn.Module):
+    """ an identity layer, used to "get rid of" layers in our ImageNet models that we don't want to use; it just passes 
+        the data forward """
     def __init__(self):
         super(Identity, self).__init__()
         
     def forward(self, x):
         return x
 
-# ResNet50 model using all layers with two LL+BN for a classifier
 class ResNet50ModelAllLayers(Model):
+    """ ResNet50 model using all layers with two LL+BN for a classifier """
     def __init__(self, freeze, n_classes, learning_rate):
         model = models.resnet50(pretrained=True)
         for param in model.parameters():
@@ -285,8 +328,8 @@ class ResNet50ModelAllLayers(Model):
 
         Model.__init__(self, "ResNet50ModelAllLayers", model, learning_rate)
 
-# ResNet18 model using all layers with two LL+BN for a classifier
 class ResNet18ModelAllLayers(Model):
+    """ ResNet18 model using all layers with two LL+BN for a classifier """
     def __init__(self, freeze, n_classes, learning_rate, pretrained=True):
         model = models.resnet18(pretrained=pretrained)
         for param in model.parameters():
@@ -301,8 +344,8 @@ class ResNet18ModelAllLayers(Model):
 
         Model.__init__(self, "ResNet18ModelAllLayers", model, learning_rate)
 
-# ResNet18 model using first two blocks with three LL+BN for a classifier
 class ResNet18ModelLowerLayers(Model):
+    """ ResNet18 model using first two blocks with three LL+BN for a classifier """
     def __init__(self, freeze, n_classes, learning_rate):
         model = models.resnet18(pretrained=True)
         for param in model.parameters():
@@ -324,8 +367,8 @@ class ResNet18ModelLowerLayers(Model):
 
         Model.__init__(self, "ResNet18ModelLowerLayers", model, learning_rate)
 
-# Vgg16 model using all layers with two LL+BN for a classifier
 class VggModelAllLayers(Model):
+    """ Vgg16 model using all layers with two LL+BN for a classifier """
     def __init__(self, freeze, n_classes, learning_rate, pretrained=True):
         model = models.vgg16(pretrained=pretrained)
         for param in model.features.parameters():
@@ -343,8 +386,8 @@ class VggModelAllLayers(Model):
 
         Model.__init__(self, "VggModelAllLayers", model, learning_rate)
 
-# Vgg19 model using all layers with two LL+BN for a classifier
 class Vgg19ModelAllLayers(Model):
+    """ Vgg19 model using all layers with two LL+BN for a classifier """
     def __init__(self, freeze, n_classes, learning_rate):
         model = models.vgg19_bn(pretrained=True)
         for param in model.features.parameters():
@@ -363,13 +406,14 @@ class Vgg19ModelAllLayers(Model):
 
         Model.__init__(self, "Vgg19ModelAllLayers", model, learning_rate)
 
-# Vgg16 model using first 13 layers only with three LL+BN for a classifier
 class VggModelLowerLayers(Model):
+    """ Vgg16 model using first 13 layers only with three LL+BN for a classifier """
     def __init__(self, freeze, n_classes, learning_rate):
         model = models.vgg16(pretrained=True)
         for param in model.features.parameters():
             param.requires_grad = freeze
 
+        # set the upper layers of the model to Identity, so they are effectively ignored/removed
         model.features[14] = Identity()
         model.features[15] = Identity()
         model.features[16] = Identity()
@@ -394,7 +438,6 @@ class VggModelLowerLayers(Model):
         model.classifier[4] = Identity()
         model.classifier[5] = Identity()
 
-        #n_inputs = model.classifier[6].in_features
         model.classifier[6] = nn.Sequential(
             nn.Linear(12544, 4096), 
             nn.ReLU(), 
@@ -409,12 +452,12 @@ class VggModelLowerLayers(Model):
 
         Model.__init__(self, "VggModelLowerLayers", model, learning_rate)
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # BESPOKE model classes
-# #########################################################################################################################################################
+# #####################################################################################################################
 
-# a CNN model meant to mimic the number of layers of a full transfer learning model
 class CNN(nn.Module):
+    """ a CNN model meant to mimic the number of layers of a full transfer learning model """
     def __init__(self, num_classes=10, neurons=2048):
         super(CNN, self).__init__()
 
@@ -461,18 +504,13 @@ class CNN(nn.Module):
             nn.Linear(128, num_classes))
 
     def forward(self, input):
-        #print("in forward")
-        #print(input.shape)
         output = self.conv_base(input)
-        #print(output.shape)
         output = output.view(output.size(0), -1)
-        #print(output.shape)
         output = self.fc(output)
-
         return output
 
-# a CNN model with only a single incoming channel
 class CNNGreyscale(nn.Module):
+    """ a CNN model with only a single incoming channel """
     def __init__(self, num_classes=10):
         super(CNNGreyscale, self).__init__()
 
@@ -520,20 +558,14 @@ class CNNGreyscale(nn.Module):
             #nn.BatchNorm1d(num_features=128),            
             nn.Linear(128, num_classes))
 
-
     def forward(self, input):
-        #print("in forward")
-        #print(input.shape)
         output = self.conv_base(input)
-        #print('output', output.shape)
         output = output.view(output.size(0), -1)
-        #print('view', output.shape)
         output = self.fc(output)
-
         return output
 
-# a CNN model with fewer layers than the full one defined above
 class CNNMini(nn.Module):
+    """ a CNN model with fewer layers than the full one defined above """
     def __init__(self, num_classes=10):
         super(CNNMini, self).__init__()
 
@@ -562,19 +594,15 @@ class CNNMini(nn.Module):
             nn.Linear(128, num_classes))
 
     def forward(self, input):
-        #print("in forward")
-        #print(input.shape)
         output = self.conv_base(input)
-        #print(output.shape)
         output = output.view(output.size(0), -1)
-        #print(output.shape)
         output = self.fc(output)
 
         return output
 
-# #########################################################################################################################################################
+# #####################################################################################################################
 # WRAPPER classes that call the custom models we created above
-# #########################################################################################################################################################
+# #####################################################################################################################
 
 class CNNMiniModel(Model):
     def __init__(self, n_classes, learning_rate):
@@ -591,24 +619,25 @@ class CNNGreyModel(Model):
         model = CNNGreyscale(n_classes)
         Model.__init__(self, "CNNGreyModel", model, learning_rate)
 
-# Creates a bespoke greyscale CNN that was pre-trained on the biomed_self_label_shape dataset; this is meant to be used for transfer learning
 class CellNetBiomedShapeModel(Model):
+    """ Creates a bespoke greyscale CNN that was pre-trained on the biomed_self_label_shape dataset; this is meant to 
+        be used for transfer learning """
     def __init__(self, freeze, n_classes, learning_rate):
         model = CNNGreyscale(4) 
         model.load_state_dict(torch.load("./CNNGreyModel_biomed_self_label_shape_baseline_0.torch"))
         model.fc[6] = nn.Linear(128, n_classes)
         Model.__init__(self, "CellNetBiomedShapeModel", model, learning_rate)
 
-# Allows transfer learning from a Vgg16 model tha was trained on the biomed_self_label_shape dataset
 class Vgg16BiomedShapeModel(Model):
+    """ Allows transfer learning from a Vgg16 model tha was trained on the biomed_self_label_shape dataset """
     def __init__(self, freeze, n_classes, learning_rate):
         model = VggModelAllLayers(freeze=False, n_classes=4, learning_rate=learning_rate)
         model.model.load_state_dict(torch.load("./VggModelAllLayers_biomed_self_label_shape_baseline_0.torch"))
         model.model.classifier[6][3] = nn.Linear(256, n_classes)
         Model.__init__(self, "Vgg16BiomedShapeModel", model.model, learning_rate)
 
-# Allows transfer learning from a Vgg16 model tha was trained on the biomed_self_label_shape dataset
 class ResNetCovid19Model3Classes(Model):
+    """ Allows transfer learning from a Vgg16 model tha was trained on the biomed_self_label_shape dataset """
     def __init__(self, n_classes, learning_rate):
         model = models.resnet50(pretrained=False) 
         model.conv1 = torch.nn.Conv2d(5, 64, kernel_size=(7, 7), stride=(2, 2), 
@@ -628,12 +657,15 @@ class ResNetCovid19Model3Classes(Model):
         model.fc = torch.nn.Linear(in_features=2048, out_features=n_classes, bias=True) 
         Model.__init__(self, "ResNetCovid19Model3Classes", model, learning_rate)
 
-# classifier meant to be used with the huge covid19 images dataset; this dataset contains images with five channels, one for each different
-# treatment of a cell culture with some chemical/drug. We build a classifier below to take a single-channel image, and predict which of the
-# five channels it belongs to -- this is kind of biologically meaningless, but our hope is that this model learns something that is useful
-# for transfer learning for other biomedical models.
-# see cellnet_transfer.py for further details.
+
 class Vgg19OneChannelModelAllLayers(Model):
+    """ Classifier meant to be used with the huge covid19 images dataset; this dataset contains images with five 
+        channels, one for each different treatment of a cell culture with some chemical/drug. We build a classifier 
+        below to take a single-channel image, and predict which of the five channels it belongs to -- this is kind 
+        of biologically meaningless, but our hope is that this model learns something that is useful for transfer 
+        learning for other biomedical models. See cellnet_transfer.py for further details.
+
+    """
     def __init__(self, n_classes, learning_rate, pretrained=False):
         model = models.vgg19_bn(pretrained=pretrained)
         for param in model.parameters():
@@ -650,17 +682,18 @@ class Vgg19OneChannelModelAllLayers(Model):
         model.classifier[6].out_features = n_classes
 
         Model.__init__(self, "Vgg19OneChannelModelAllLayers", model, learning_rate)
-
-# Allows transfer learning from a Vgg19_bn model tha was trained on the covid19 dataset 
+ 
 class Vgg19OneChannelModelAllLayersCovid19(Model):
+    """ Allows transfer learning from a Vgg19_bn model tha was trained on the covid19 greyscale dataset """
     def __init__(self, n_classes, learning_rate, saved_model):
-        model = Vgg19OneChannelModelAllLayers(learning_rate=learning_rate)
+        model = Vgg19OneChannelModelAllLayers(n_classes=5, learning_rate=learning_rate)
         model.model.load_state_dict(torch.load(saved_model, map_location=torch.device('cuda')))
         model.model.classifier[6][3] = nn.Linear(32, n_classes)
 
         Model.__init__(self, "Vgg19OneChannelModelAllLayersCovid19", model.model, learning_rate)
 
 class Vgg19ThreeChannelModelAllLayers(Model):
+    """ same as Vgg19OneChannelModelAllLayers, but for three channels """
     def __init__(self, n_classes, learning_rate, pretrained=True):
         print("classes ", n_classes)
         model = models.vgg19_bn(pretrained)
@@ -677,3 +710,21 @@ class Vgg19ThreeChannelModelAllLayers(Model):
         model.classifier[6].out_features = n_classes
 
         Model.__init__(self, "Vgg19ThreeChannelModelAllLayers", model, learning_rate)
+
+class Vgg19ThreeChannelModelAllLayersCovid19(Model):
+    """ Allows transfer learning from a Vgg19_bn model tha was trained on the covid19 RGB dataset """
+    def __init__(self, n_classes, learning_rate, saved_model):
+        model = Vgg19ThreeChannelModelAllLayers(n_classes=5, learning_rate=learning_rate)
+        model.model.load_state_dict(torch.load(saved_model, map_location=torch.device('cuda')))
+        model.model.classifier[6][3] = nn.Linear(32, n_classes)
+
+        Model.__init__(self, "Vgg19ThreeChannelModelAllLayersCovid19", model.model, learning_rate)
+
+class CNNGreyModelCovid19(Model):
+    """ Allows transfer learning from a shallow CNN model tha was trained on the covid19 greyscale dataset """
+    def __init__(self, n_classes, learning_rate, saved_model):
+        model = CNNGreyModel(n_classes=5, learning_rate=learning_rate)
+        model.model.load_state_dict(torch.load(saved_model, map_location=torch.device('cuda')))
+        model.model.fc[6] = nn.Linear(128, n_classes)
+
+        Model.__init__(self, "CNNGreyModelCovid19", model.model, learning_rate)

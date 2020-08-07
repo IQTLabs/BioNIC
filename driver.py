@@ -66,12 +66,12 @@ models_to_run = [
 					#"vgg_1channel_covid19_noImageNet__kaggle_blog3 False",
 					#"vgg_1channel_covid19_withImageNet__kaggle_blog3 False",
 					#"vgg_1channel_withImageNet_only__kaggle_blog3 False",
-					"vgg_1channel_noImageNet_only__kaggle_blog3 False",
+					#"vgg_1channel_noImageNet_only__kaggle_blog3 False",
 					#"vgg_3channel_covid19_noImageNet__kaggle_blog3 False",
 					#"vgg_3channel_covid19_withImageNet__kaggle_blog3 False",
 					#"vgg_3channel_withImageNet_only__kaggle_blog3 False",
 					#"vgg_3channel_noImageNet_only__kaggle_blog3 False",
-					#"cnn_grey_covid19_only__kaggle_blog3 False"
+					"cnn_grey_covid19_only__kaggle_blog3 False" 
 
 					#"resnet_only__malaria_cell_images_blog1 False",
 					#"resnet_lower__malaria_cell_images_blog1 False",

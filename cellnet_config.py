@@ -58,15 +58,72 @@ eval_transforms_224_RGB_blog3 = [
 
 # #####################################################################################################################
 
-vgg_only__kaggle_baseline_mean = [0.0918, 0.0918, 0.0918]
-vgg_only__kaggle_baseline_std = [0.1675, 0.1675, 0.1675]
+kaggle_baseline_mean = [0.0918, 0.0918, 0.0918]
+kaggle_baseline_std = [0.1675, 0.1675, 0.1675]
 
-vgg_only__kaggle_blog3 = {}
-vgg_only__kaggle_blog3['traindir'] = 'kaggle_bowl'
-vgg_only__kaggle_blog3['testdir'] = 'kaggle_bowl'
-vgg_only__kaggle_blog3['labels'] = os.listdir(vgg_only__kaggle_blog3['traindir'])
-vgg_only__kaggle_blog3['max_class_samples'] = None #400
-vgg_only__kaggle_blog3['usesCV'] = True
+base__kaggle_blog3 = {}
+base__kaggle_blog3['traindir'] = 'kaggle_bowl'
+base__kaggle_blog3['testdir'] = 'kaggle_bowl'
+base__kaggle_blog3['labels'] = os.listdir(base__kaggle_blog3['traindir'])
+base__kaggle_blog3['max_class_samples'] = None #400
+base__kaggle_blog3['usesCV'] = True
+
+vgg_1channel_covid19_noImageNet__kaggle_blog3 = copy.deepcopy(base__kaggle_blog3)
+vgg_1channel_covid19_noImageNet__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=8, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__kaggle_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_1channel_covid19_noImageNet__kaggle_blog3['train_transforms'] = train_transforms_380_greyscale_blog3
+vgg_1channel_covid19_noImageNet__kaggle_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
+vgg_1channel_covid19_noImageNet__kaggle_blog3['train_transforms'][-1] = transforms.Normalize([kaggle_baseline_mean[0]], [kaggle_baseline_std[0]])
+vgg_1channel_covid19_noImageNet__kaggle_blog3['eval_transforms'][-1] = transforms.Normalize([kaggle_baseline_mean[0]], [kaggle_baseline_std[0]])
+
+vgg_1channel_covid19_withImageNet__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__kaggle_blog3)
+vgg_1channel_covid19_withImageNet__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=8, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__kaggle_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__kaggle_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_withImageNet_only__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_withImageNet__kaggle_blog3)
+vgg_1channel_withImageNet_only__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=8, learning_rate=1e-3, pretrained=True)'
+vgg_1channel_withImageNet_only__kaggle_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_withImageNet_only__kaggle_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_noImageNet_only__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_withImageNet__kaggle_blog3)
+vgg_1channel_noImageNet_only__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=8, learning_rate=1e-3, pretrained=False)'
+vgg_1channel_noImageNet_only__kaggle_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
+
+vgg_3channel_covid19_noImageNet__kaggle_blog3 = copy.deepcopy(vgg_1channel_noImageNet_only__kaggle_blog3)
+vgg_3channel_covid19_noImageNet__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=8, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_3channel_covid19_noImageNet__kaggle_blog3['train_transforms'] = train_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__kaggle_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__kaggle_blog3['train_transforms'][-1] = transforms.Normalize(kaggle_baseline_mean, kaggle_baseline_std)
+vgg_3channel_covid19_noImageNet__kaggle_blog3['eval_transforms'][-1] = transforms.Normalize(kaggle_baseline_mean, kaggle_baseline_std)
+
+vgg_3channel_covid19_withImageNet__kaggle_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__kaggle_blog3)
+vgg_3channel_covid19_withImageNet__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=8, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__kaggle_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_withImageNet_only__kaggle_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__kaggle_blog3)
+vgg_3channel_withImageNet_only__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=8, learning_rate=1e-3, pretrained=True)'
+vgg_3channel_withImageNet_only__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_withImageNet_only__kaggle_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_noImageNet_only__kaggle_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__kaggle_blog3)
+vgg_3channel_noImageNet_only__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=8, learning_rate=1e-3, pretrained=False)'
+vgg_3channel_noImageNet_only__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
+
+cnn_grey_covid19_only__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__kaggle_blog3)
+cnn_grey_covid19_only__kaggle_blog3['model'] = 'CNNGreyModelCovid19(n_classes=8, learning_rate=1e-4, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__kaggle_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__kaggle_blog3['traindir'] + "_" 
+
+
+# #########################################################################################################################################################
+'''
+resnet_only__malaria_cell_images_blog3 = copy.deepcopy(vgg_only__kaggle_blog1)
+resnet_only__malaria_cell_images_blog3['traindir'] = 'malaria_cell_images'
+resnet_only__malaria_cell_images_blog1['testdir'] = 'malaria_cell_images'
+resnet_only__malaria_cell_images_blog1['labels'] = os.listdir(resnet_only__malaria_cell_images_blog1['traindir'])
+resnet_only__malaria_cell_images_blog1['model'] = 'ResNet18ModelAllLayers(freeze=False, n_classes=2, learning_rate=learning_rate)'
+resnet_only__malaria_cell_images_blog1['name'] = 'ResNet18ModelAllLayers' + "_" + resnet_only__malaria_cell_images_blog1['traindir'] + "_" + "blog1"
+resnet_only__malaria_cell_images_blog1['train_transforms'] = train_transforms_malaria_images_blog1
+resnet_only__malaria_cell_images_blog1['eval_transforms'] = eval_transforms_malaria_images_blog1
+resnet_only__malaria_cell_images_blog1['max_class_samples'] = 500
 
 vgg_1channel_covid19_noImageNet__kaggle_blog3 = copy.deepcopy(vgg_only__kaggle_blog3)
 vgg_1channel_covid19_noImageNet__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=8, learning_rate=1e-3)'
@@ -109,11 +166,6 @@ vgg_3channel_noImageNet_only__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAll
 vgg_3channel_noImageNet_only__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
 
 cnn_grey_covid19_only__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__kaggle_blog3)
-cnn_grey_covid19_only__kaggle_blog3['model'] = 'CNNGreyModelCovid19(n_classes=8, learning_rate=1e-3, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__kaggle_blog3['model'] = 'CNNGreyModelCovid19(n_classes=8, learning_rate=1e-4, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
 cnn_grey_covid19_only__kaggle_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__kaggle_blog3['traindir'] + "_" 
-
-
-
-# #########################################################################################################################################################
-
-
+'''

@@ -10,6 +10,7 @@ from subprocess import Popen, PIPE, STDOUT
 
 gpu = "0"
 confidence_threshold = 0.8
+GENERATE_CONFIDENCES = False	# tells the script to create the subdirectories of raw images by model confidence
 
 """ List of which model(s) do you want to run? The models have all been specified in your *_config.py files
 	The True flag will re-create the holdout, while False will not -- we recommend that you only set it to True for 
@@ -71,7 +72,7 @@ models_to_run = [
 					#"vgg_3channel_covid19_withImageNet__kaggle_blog3 False",
 					#"vgg_3channel_withImageNet_only__kaggle_blog3 False",
 					#"vgg_3channel_noImageNet_only__kaggle_blog3 False",
-					"cnn_grey_covid19_only__kaggle_blog3 False" 
+					#"cnn_grey_covid19_only__kaggle_blog3 False" 
 
 					#"resnet_only__malaria_cell_images_blog1 False",
 					#"resnet_lower__malaria_cell_images_blog1 False",
@@ -92,7 +93,16 @@ models_to_run = [
 					#"cnn_only__malaria_cell_images_venn_blog1 False"
 					#"vgg_covid19_only__malaria_cell_images_blog1 False",
 					#"vgg19_pretrained_only__malaria_cell_images_blog1 False",
-					#"vgg16BN_pretrained_only__malaria_cell_images_blog1 False"
+					#"vgg16BN_pretrained_only__malaria_cell_images_blog1 False",
+					#"vgg_1channel_covid19_noImageNet__malaria_cell_images_blog3 False",
+					#"vgg_1channel_covid19_withImageNet__malaria_cell_images_blog3 False",
+					#"vgg_1channel_withImageNet_only__malaria_cell_images_blog3 False",
+					#"vgg_1channel_noImageNet_only__malaria_cell_images_blog3 False",
+					#"vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3 False",
+					#"vgg_3channel_covid19_withImageNet__malaria_cell_images_blog3 False",
+					#"vgg_3channel_withImageNet_only__malaria_cell_images_blog3 False",
+					#"vgg_3channel_noImageNet_only__malaria_cell_images_blog3 False",
+					#"cnn_grey_covid19_only__malaria_cell_images_blog3 False"
 			
 					#"resnet_only__WBC_images_blog1 False",
 					#"resnet_lower__WBC_images_blog1 False",
@@ -112,6 +122,15 @@ models_to_run = [
 					#"vgg_covid19_only__WBC_images_blog1 False",
 					#"vgg19_pretrained_only__WBC_images_blog1 False",
 					#"vgg16BN_pretrained_only__WBC_images_blog1 False"
+					#"vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3 False",
+					#"vgg_1channel_covid19_withImageNet__blood_WBC_blog3 False",
+					#"vgg_1channel_withImageNet_only__blood_WBC_blog3 False",
+					#"vgg_1channel_noImageNet_only__blood_WBC_blog3 False",
+					#"vgg_3channel_covid19_noImageNet__blood_WBC_blog3 False",
+					#"vgg_3channel_covid19_withImageNet__blood_WBC_blog3 False",
+					"vgg_3channel_withImageNet_only__blood_WBC_blog3 False",
+					"vgg_3channel_noImageNet_only__blood_WBC_blog3 False",
+					"cnn_grey_covid19_only__blood_WBC_blog3 False"
 
 					#"resnet_only__cat_counts_blog1 False",
 					#"resnet_lower__cat_counts_blog1 False",
@@ -258,45 +277,46 @@ models_to_run = [
 for model in models_to_run:
 	os.system("python3 cellnet_driver_no_validation.py " + gpu + " " + model )
 
-# grab the results, copy images into high and low confidence folders
-p = Popen("ls *.holdout_confidences.txt", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
-returned_output = p.stdout.read()
-returned_output = str(returned_output).split("\\n")
-files = []
-for line in returned_output:
-	line = str(line)
-	if line.startswith("b'"):
-		line = line[2:]
-	if len(line) < 4:
-		continue
-	files.append(line)
+if GENERATE_CONFIDENCES:
+	# grab the results, copy images into high and low confidence folders
+	p = Popen("ls *.holdout_confidences.txt", shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
+	returned_output = p.stdout.read()
+	returned_output = str(returned_output).split("\\n")
+	files = []
+	for line in returned_output:
+		line = str(line)
+		if line.startswith("b'"):
+			line = line[2:]
+		if len(line) < 4:
+			continue
+		files.append(line)
 
-# create high and low confidence folders
-for file in files:
-	handle = file.split(".")[0]
-	if os.path.exists(handle):
-		os.system("rm -r " + handle)
-	os.system("mkdir " + handle)
-	os.system("mkdir " + handle + "/high_confidence")
-	os.system("mkdir " + handle + "/low_confidence")
+	# create high and low confidence folders
+	for file in files:
+		handle = file.split(".")[0]
+		if os.path.exists(handle):
+			os.system("rm -r " + handle)
+		os.system("mkdir " + handle)
+		os.system("mkdir " + handle + "/high_confidence")
+		os.system("mkdir " + handle + "/low_confidence")
 
-	file = open(file)
-	data = file.readlines()
-	file.close()
+		file = open(file)
+		data = file.readlines()
+		file.close()
 
-	# move images into high and low confidence folders, where labels have been changed to make inspection easier (did 
-	# we predict correctly or not?)
-	for d in data:
-		if len(d) == 5:
-			d = d.split(',')
-			filename = d[0][2:-1]
-			confidence = float(d[1][8:])
-			pred = d[4].rstrip()[1:]
-			target = d[5].rstrip()[1:-1]
-			if confidence >= confidence_threshold:
-				os.system("cp " + filename + " ./" + handle + "/high_confidence/" + filename.split("/")[-1].split(".")[0] + \
-					"_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
-			else:
-				os.system("cp " + filename + " ./" + handle + "/low_confidence/" + filename.split("/")[-1].split(".")[0] + \
-					"_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
+		# move images into high and low confidence folders, where labels have been changed to make inspection easier (did 
+		# we predict correctly or not?)
+		for d in data:
+			if len(d) == 5:
+				d = d.split(',')
+				filename = d[0][2:-1]
+				confidence = float(d[1][8:])
+				pred = d[4].rstrip()[1:]
+				target = d[5].rstrip()[1:-1]
+				if confidence >= confidence_threshold:
+					os.system("cp " + filename + " ./" + handle + "/high_confidence/" + filename.split("/")[-1].split(".")[0] + \
+						"_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
+				else:
+					os.system("cp " + filename + " ./" + handle + "/low_confidence/" + filename.split("/")[-1].split(".")[0] + \
+						"_target" + str(target) + "_pred" + str(pred) + "." + filename.split("/")[-1].split(".")[1])
 

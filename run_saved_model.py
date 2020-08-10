@@ -30,6 +30,7 @@ from dataset_prep import *
 # model config files
 from augment_config import *
 from cellnet_config import *
+from internal_brightfield_config import *
 
 # #####################################################################################################################
 # BASIC CONFIGURATION

@@ -128,9 +128,9 @@ models_to_run = [
 					#"vgg_1channel_noImageNet_only__blood_WBC_blog3 False",
 					#"vgg_3channel_covid19_noImageNet__blood_WBC_blog3 False",
 					#"vgg_3channel_covid19_withImageNet__blood_WBC_blog3 False",
-					"vgg_3channel_withImageNet_only__blood_WBC_blog3 False",
-					"vgg_3channel_noImageNet_only__blood_WBC_blog3 False",
-					"cnn_grey_covid19_only__blood_WBC_blog3 False"
+					#"vgg_3channel_withImageNet_only__blood_WBC_blog3 False",
+					#"vgg_3channel_noImageNet_only__blood_WBC_blog3 False",
+					#"cnn_grey_covid19_only__blood_WBC_blog3 False"
 
 					#"resnet_only__cat_counts_blog1 False",
 					#"resnet_lower__cat_counts_blog1 False",
@@ -151,6 +151,15 @@ models_to_run = [
 					#"vgg_covid19_only__cat_counts_blog1 False",
 					#"vgg19_pretrained_only__cat_counts_blog1 False",
 					#"vgg16BN_pretrained_only__cat_counts_blog1 False"
+					#"vgg_1channel_covid19_noImageNet__cat_counts_images_blog3 False",
+					#"vgg_1channel_covid19_withImageNet__cat_counts_blog3 False",
+					#"vgg_1channel_withImageNet_only__cat_counts_blog3 False",
+					#"vgg_1channel_noImageNet_only__cat_counts_blog3 False",
+					#"vgg_3channel_covid19_noImageNet__cat_counts_blog3 False",
+					#"vgg_3channel_covid19_withImageNet__cat_counts_blog3 False",
+					#"vgg_3channel_withImageNet_only__cat_counts_blog3 False",
+					#"vgg_3channel_noImageNet_only__cat_counts_blog3 False",
+					#"cnn_grey_covid19_only__cat_counts_blog3 False"
 
 					#"resnet_only__labeled_confocal_protein_blog1 False",
 					#"resnet_lower__labeled_confocal_protein_blog1 False",
@@ -173,6 +182,15 @@ models_to_run = [
 					#"vgg_covid19_only__labeled_confocal_protein_blog1 False",
 					#"vgg19_pretrained_only__labeled_confocal_protein_blog1 False",
 					#"vgg16BN_pretrained_only__labeled_confocal_protein_blog1 False"
+					"vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3 False",
+					"vgg_1channel_covid19_withImageNet__labeled_confocal_protein_blog3 False",
+					"vgg_1channel_withImageNet_only__labeled_confocal_protein_blog3 False",
+					"vgg_1channel_noImageNet_only__labeled_confocal_protein_blog3 False",
+					"vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3 False",
+					"vgg_3channel_covid19_withImageNet__labeled_confocal_protein_blog3 False",
+					"vgg_3channel_withImageNet_only__labeled_confocal_protein_blog3 False",
+					"vgg_3channel_noImageNet_only__labeled_confocal_protein_blog3 False",
+					"cnn_grey_covid19_only__labeled_confocal_protein_blog3 False"
 
 					#"resnet_only__CHO_images_blog1 False",
 					#"resnet_lower__CHO_images_blog1 False",

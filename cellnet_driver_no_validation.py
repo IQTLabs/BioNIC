@@ -51,7 +51,7 @@ from internal_brightfield_config import *
 # #####################################################################################################################
 batch_size = 8
 epochs = 20             # default epochs (can be overriden in *_config.py for your models)
-learning_rate = 1e-3
+learning_rate = 1e-5
 device = "cuda"
 
 calcStats = False  # turn this on if you want to calc mean and stddev of training dataset for normalization in transform
@@ -61,15 +61,6 @@ drop_last = True   # BatchNorm has issues if there are too few samples in the fi
 non_CV_div = 1     # used to reduce the number of trials manually if you're not doing CV
 
 SINGLE_IMAGE = '/home/kdobolyi/cellnet/activations/' # used for printing out activations (for a blog post)
-
-# used with calcStats to calculate the mean and stddev of the greyscale images for later normalization; you may need to 
-# update this for your dataset
-stats_transforms = [#transforms.CenterCrop(224),
-                    #transforms.Grayscale(),
-                    transforms.Resize([224,224]),
-                    transforms.Grayscale(),
-                    transforms.ToTensor()]
-
 
 # obtain the model you want to analyze from the command line
 model = eval(sys.argv[2])
@@ -97,7 +88,8 @@ if calcStats == False:
 
 else:
     # find the mean and stddev for the training data, and quit, so these can be manually copied into the config file
-    dataset = datasets.ImageFolder(traindir, transform=transforms.Compose(stat_transforms))
+    stats_transforms = model['eval_transforms'][:-1]
+    dataset = datasets.ImageFolder(model['traindir'], transform=transforms.Compose(stats_transforms))
     loader = DataLoader(dataset, batch_size=batch_size, num_workers=0, shuffle=False)
     getMeanStddev(loader)
 

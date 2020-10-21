@@ -71,7 +71,7 @@ base__kaggle_blog3['max_class_samples'] = None #400
 base__kaggle_blog3['usesCV'] = True
 
 vgg_1channel_covid19_noImageNet__kaggle_blog3 = copy.deepcopy(base__kaggle_blog3)
-vgg_1channel_covid19_noImageNet__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=8, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=8, learning_rate=1e-3)'
 vgg_1channel_covid19_noImageNet__kaggle_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_1channel_covid19_noImageNet__kaggle_blog3['train_transforms'] = train_transforms_380_greyscale_blog3
 vgg_1channel_covid19_noImageNet__kaggle_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
@@ -79,7 +79,7 @@ vgg_1channel_covid19_noImageNet__kaggle_blog3['train_transforms'][-1] = transfor
 vgg_1channel_covid19_noImageNet__kaggle_blog3['eval_transforms'][-1] = transforms.Normalize([kaggle_baseline_mean[0]], [kaggle_baseline_std[0]])
 
 vgg_1channel_covid19_withImageNet__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__kaggle_blog3)
-vgg_1channel_covid19_withImageNet__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=8, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=8, learning_rate=1e-3)'
 vgg_1channel_covid19_withImageNet__kaggle_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__kaggle_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_1channel_withImageNet_only__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_withImageNet__kaggle_blog3)
@@ -91,7 +91,7 @@ vgg_1channel_noImageNet_only__kaggle_blog3['model'] = 'Vgg19OneChannelModelAllLa
 vgg_1channel_noImageNet_only__kaggle_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
 
 vgg_3channel_covid19_noImageNet__kaggle_blog3 = copy.deepcopy(vgg_1channel_noImageNet_only__kaggle_blog3)
-vgg_3channel_covid19_noImageNet__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=8, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=8, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
 vgg_3channel_covid19_noImageNet__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_3channel_covid19_noImageNet__kaggle_blog3['train_transforms'] = train_transforms_224_RGB_blog3
 vgg_3channel_covid19_noImageNet__kaggle_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
@@ -99,7 +99,7 @@ vgg_3channel_covid19_noImageNet__kaggle_blog3['train_transforms'][-1] = transfor
 vgg_3channel_covid19_noImageNet__kaggle_blog3['eval_transforms'][-1] = transforms.Normalize(kaggle_baseline_mean, kaggle_baseline_std)
 
 vgg_3channel_covid19_withImageNet__kaggle_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__kaggle_blog3)
-vgg_3channel_covid19_withImageNet__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=8, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=8, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
 vgg_3channel_covid19_withImageNet__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__kaggle_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_3channel_withImageNet_only__kaggle_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__kaggle_blog3)
@@ -111,7 +111,7 @@ vgg_3channel_noImageNet_only__kaggle_blog3['model'] = 'Vgg19ThreeChannelModelAll
 vgg_3channel_noImageNet_only__kaggle_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__kaggle_blog3['traindir'] + "_" + "withoutImageNet"
 
 cnn_grey_covid19_only__kaggle_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__kaggle_blog3)
-cnn_grey_covid19_only__kaggle_blog3['model'] = 'CNNGreyModelCovid19(n_classes=8, learning_rate=1e-4, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__kaggle_blog3['model'] = 'CNNGreyModelCovid19(n_classes=8, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
 cnn_grey_covid19_only__kaggle_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__kaggle_blog3['traindir'] + "_" 
 
 
@@ -126,11 +126,11 @@ base__malaria_cell_images_blog3['eval_transforms'] = eval_transforms_380_greysca
 base__malaria_cell_images_blog3['max_class_samples'] = 500
 
 vgg_1channel_covid19_noImageNet__malaria_cell_images_blog3 = copy.deepcopy(base__malaria_cell_images_blog3)
-vgg_1channel_covid19_noImageNet__malaria_cell_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=2, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__malaria_cell_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=2, learning_rate=1e-3)'
 vgg_1channel_covid19_noImageNet__malaria_cell_images_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__malaria_cell_images_blog3['traindir'] + "_" + "withoutImageNet"
 
 vgg_1channel_covid19_withImageNet__malaria_cell_images_blog3 = copy.deepcopy(base__malaria_cell_images_blog3)
-vgg_1channel_covid19_withImageNet__malaria_cell_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=2, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__malaria_cell_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=2, learning_rate=1e-3)'
 vgg_1channel_covid19_withImageNet__malaria_cell_images_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__malaria_cell_images_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_1channel_withImageNet_only__malaria_cell_images_blog3 = copy.deepcopy(base__malaria_cell_images_blog3)
@@ -142,13 +142,13 @@ vgg_1channel_noImageNet_only__malaria_cell_images_blog3['model'] = 'Vgg19OneChan
 vgg_1channel_noImageNet_only__malaria_cell_images_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__malaria_cell_images_blog3['traindir'] + "_" + "withoutImageNet"
 
 vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3 = copy.deepcopy(vgg_1channel_noImageNet_only__malaria_cell_images_blog3)
-vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=2, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=2, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
 vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3['train_transforms'] = train_transforms_224_RGB_blog3
 vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
 
 vgg_3channel_covid19_withImageNet__malaria_cell_images_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3)
-vgg_3channel_covid19_withImageNet__malaria_cell_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=2, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__malaria_cell_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=2, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
 vgg_3channel_covid19_withImageNet__malaria_cell_images_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__malaria_cell_images_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_3channel_withImageNet_only__malaria_cell_images_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__malaria_cell_images_blog3)
@@ -160,7 +160,7 @@ vgg_3channel_noImageNet_only__malaria_cell_images_blog3['model'] = 'Vgg19ThreeCh
 vgg_3channel_noImageNet_only__malaria_cell_images_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__malaria_cell_images_blog3['traindir'] + "_" + "withoutImageNet"
 
 cnn_grey_covid19_only__malaria_cell_images_blog3 = copy.deepcopy(vgg_1channel_noImageNet_only__malaria_cell_images_blog3)
-cnn_grey_covid19_only__malaria_cell_images_blog3['model'] = 'CNNGreyModelCovid19(n_classes=2, learning_rate=1e-4, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__malaria_cell_images_blog3['model'] = 'CNNGreyModelCovid19(n_classes=2, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
 cnn_grey_covid19_only__malaria_cell_images_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__malaria_cell_images_blog3['traindir'] + "_" 
 
 # #########################################################################################################################################################
@@ -178,13 +178,13 @@ base__blood_WBC_blog3['train_transforms'] = train_transforms_380_greyscale_blog3
 base__blood_WBC_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
 
 vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3 = copy.deepcopy(base__blood_WBC_blog3)
-vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=4, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=4, learning_rate=1e-3)'
 vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3['train_transforms'][-1] = transforms.Normalize(blood_WBC_grey_mean, blood_WBC_grey_std)
 vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3['eval_transforms'][-1] = transforms.Normalize(blood_WBC_grey_mean, blood_WBC_grey_std)
 
 vgg_1channel_covid19_withImageNet__blood_WBC_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3)
-vgg_1channel_covid19_withImageNet__blood_WBC_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=4, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__blood_WBC_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=4, learning_rate=1e-3)'
 vgg_1channel_covid19_withImageNet__blood_WBC_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__blood_WBC_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_1channel_withImageNet_only__blood_WBC_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3)
@@ -196,7 +196,7 @@ vgg_1channel_noImageNet_only__blood_WBC_blog3['model'] = 'Vgg19OneChannelModelAl
 vgg_1channel_noImageNet_only__blood_WBC_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__blood_WBC_blog3['traindir'] + "_" + "withoutImageNet"
 
 vgg_3channel_covid19_noImageNet__blood_WBC_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3)
-vgg_3channel_covid19_noImageNet__blood_WBC_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=4, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__blood_WBC_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=4, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
 vgg_3channel_covid19_noImageNet__blood_WBC_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__blood_WBC_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_3channel_covid19_noImageNet__blood_WBC_blog3['train_transforms'] = train_transforms_224_RGB_blog3
 vgg_3channel_covid19_noImageNet__blood_WBC_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
@@ -204,7 +204,7 @@ vgg_3channel_covid19_noImageNet__blood_WBC_blog3['train_transforms'][-1] = trans
 vgg_3channel_covid19_noImageNet__blood_WBC_blog3['eval_transforms'][-1] = transforms.Normalize(blood_WBC_baseline_mean, blood_WBC_baseline_std)
 
 vgg_3channel_covid19_withImageNet__blood_WBC_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__blood_WBC_blog3)
-vgg_3channel_covid19_withImageNet__blood_WBC_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=4, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__blood_WBC_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=4, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
 vgg_3channel_covid19_withImageNet__blood_WBC_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__blood_WBC_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_3channel_withImageNet_only__blood_WBC_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__blood_WBC_blog3)
@@ -216,7 +216,7 @@ vgg_3channel_noImageNet_only__blood_WBC_blog3['model'] = 'Vgg19ThreeChannelModel
 vgg_3channel_noImageNet_only__blood_WBC_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__blood_WBC_blog3['traindir'] + "_" + "withoutImageNet"
 
 cnn_grey_covid19_only__blood_WBC_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_images_blog3)
-cnn_grey_covid19_only__blood_WBC_blog3['model'] = 'CNNGreyModelCovid19(n_classes=4, learning_rate=1e-4, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__blood_WBC_blog3['model'] = 'CNNGreyModelCovid19(n_classes=4, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
 cnn_grey_covid19_only__blood_WBC_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__blood_WBC_blog3['traindir'] + "_" 
 
 # #########################################################################################################################################################
@@ -235,13 +235,13 @@ base__cat_counts_blog3['train_transforms'] = train_transforms_380_greyscale_blog
 base__cat_counts_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
 
 vgg_1channel_covid19_noImageNet__cat_counts_images_blog3 = copy.deepcopy(base__cat_counts_blog3)
-vgg_1channel_covid19_noImageNet__cat_counts_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=5, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__cat_counts_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=5, learning_rate=1e-3)'
 vgg_1channel_covid19_noImageNet__cat_counts_images_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__cat_counts_images_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_1channel_covid19_noImageNet__cat_counts_images_blog3['train_transforms'][-1] = transforms.Normalize(cat_counts_grey_mean, cat_counts_grey_std)
 vgg_1channel_covid19_noImageNet__cat_counts_images_blog3['eval_transforms'][-1] = transforms.Normalize(cat_counts_grey_mean, cat_counts_grey_std)
 
 vgg_1channel_covid19_withImageNet__cat_counts_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__cat_counts_images_blog3)
-vgg_1channel_covid19_withImageNet__cat_counts_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=5, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__cat_counts_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=5, learning_rate=1e-3)'
 vgg_1channel_covid19_withImageNet__cat_counts_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__cat_counts_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_1channel_withImageNet_only__cat_counts_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__cat_counts_images_blog3)
@@ -253,7 +253,7 @@ vgg_1channel_noImageNet_only__cat_counts_blog3['model'] = 'Vgg19OneChannelModelA
 vgg_1channel_noImageNet_only__cat_counts_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__cat_counts_blog3['traindir'] + "_" + "withoutImageNet"
 
 vgg_3channel_covid19_noImageNet__cat_counts_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__cat_counts_images_blog3)
-vgg_3channel_covid19_noImageNet__cat_counts_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=5, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__cat_counts_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=5, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
 vgg_3channel_covid19_noImageNet__cat_counts_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__cat_counts_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_3channel_covid19_noImageNet__cat_counts_blog3['train_transforms'] = train_transforms_224_RGB_blog3
 vgg_3channel_covid19_noImageNet__cat_counts_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
@@ -261,11 +261,11 @@ vgg_3channel_covid19_noImageNet__cat_counts_blog3['train_transforms'][-1] = tran
 vgg_3channel_covid19_noImageNet__cat_counts_blog3['eval_transforms'][-1] = transforms.Normalize(cat_counts_baseline_mean, cat_counts_baseline_std)
 
 vgg_3channel_covid19_withImageNet__cat_counts_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__cat_counts_blog3)
-vgg_3channel_covid19_withImageNet__cat_counts_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=5, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__cat_counts_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=5, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
 vgg_3channel_covid19_withImageNet__cat_counts_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__cat_counts_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_3channel_withImageNet_only__cat_counts_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__cat_counts_blog3)
-vgg_3channel_withImageNet_only__cat_counts_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=5, learning_rate=1e-3, pretrained=True)'
+vgg_3channel_withImageNet_only__cat_counts_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=5, learning_rate=1e-4, pretrained=True)'
 vgg_3channel_withImageNet_only__cat_counts_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_withImageNet_only__cat_counts_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_3channel_noImageNet_only__cat_counts_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__cat_counts_blog3)
@@ -273,7 +273,7 @@ vgg_3channel_noImageNet_only__cat_counts_blog3['model'] = 'Vgg19ThreeChannelMode
 vgg_3channel_noImageNet_only__cat_counts_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__cat_counts_blog3['traindir'] + "_" + "withoutImageNet"
 
 cnn_grey_covid19_only__cat_counts_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__cat_counts_images_blog3)
-cnn_grey_covid19_only__cat_counts_blog3['model'] = 'CNNGreyModelCovid19(n_classes=5, learning_rate=1e-4, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__cat_counts_blog3['model'] = 'CNNGreyModelCovid19(n_classes=5, learning_rate=1e-5, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
 cnn_grey_covid19_only__cat_counts_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__cat_counts_blog3['traindir'] + "_" 
 
 # #########################################################################################################################################################
@@ -291,13 +291,13 @@ base__labeled_confocal_protein_blog3['train_transforms'] = train_transforms_380_
 base__labeled_confocal_protein_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
 
 vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3 = copy.deepcopy(base__labeled_confocal_protein_blog3)
-vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
 vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3['train_transforms'][-1] = transforms.Normalize(labeled_confocal_protein_grey_mean, labeled_confocal_protein_grey_std)
 vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3['eval_transforms'][-1] = transforms.Normalize(labeled_confocal_protein_grey_mean, labeled_confocal_protein_grey_std)
 
 vgg_1channel_covid19_withImageNet__labeled_confocal_protein_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3)
-vgg_1channel_covid19_withImageNet__labeled_confocal_protein_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__labeled_confocal_protein_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
 vgg_1channel_covid19_withImageNet__labeled_confocal_protein_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__labeled_confocal_protein_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_1channel_withImageNet_only__labeled_confocal_protein_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3)
@@ -309,26 +309,250 @@ vgg_1channel_noImageNet_only__labeled_confocal_protein_blog3['model'] = 'Vgg19On
 vgg_1channel_noImageNet_only__labeled_confocal_protein_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__labeled_confocal_protein_blog3['traindir'] + "_" + "withoutImageNet"
 
 vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3)
-vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
 vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['traindir'] + "_" + "withoutImageNet"
 vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['train_transforms'] = train_transforms_224_RGB_blog3
 vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
-vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['train_transforms'][-1] = transforms.Normalize(labeled_confocal_protein_grey_mean, labeled_confocal_protein_grey_std)
-vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['eval_transforms'][-1] = transforms.Normalize(labeled_confocal_protein_grey_mean, labeled_confocal_protein_grey_std)
+vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['train_transforms'][-1] = transforms.Normalize(labeled_confocal_protein_baseline_mean, labeled_confocal_protein_baseline_std)
+vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3['eval_transforms'][-1] = transforms.Normalize(labeled_confocal_protein_baseline_mean, labeled_confocal_protein_baseline_std)
 
 vgg_3channel_covid19_withImageNet__labeled_confocal_protein_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3)
-vgg_3channel_covid19_withImageNet__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
 vgg_3channel_covid19_withImageNet__labeled_confocal_protein_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__labeled_confocal_protein_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_3channel_withImageNet_only__labeled_confocal_protein_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3)
-vgg_3channel_withImageNet_only__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=True)'
+vgg_3channel_withImageNet_only__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=True)'
 vgg_3channel_withImageNet_only__labeled_confocal_protein_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_withImageNet_only__labeled_confocal_protein_blog3['traindir'] + "_" + "withImageNet"
 
 vgg_3channel_noImageNet_only__labeled_confocal_protein_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__labeled_confocal_protein_blog3)
-vgg_3channel_noImageNet_only__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=False)'
+vgg_3channel_noImageNet_only__labeled_confocal_protein_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=False)'
 vgg_3channel_noImageNet_only__labeled_confocal_protein_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__labeled_confocal_protein_blog3['traindir'] + "_" + "withoutImageNet"
 
 cnn_grey_covid19_only__labeled_confocal_protein_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__labeled_confocal_protein_images_blog3)
-cnn_grey_covid19_only__labeled_confocal_protein_blog3['model'] = 'CNNGreyModelCovid19(n_classes=9, learning_rate=1e-4, saved_model="./cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__labeled_confocal_protein_blog3['model'] = 'CNNGreyModelCovid19(n_classes=9, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
 cnn_grey_covid19_only__labeled_confocal_protein_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__labeled_confocal_protein_blog3['traindir'] + "_" 
+
+# #########################################################################################################################################################
+
+CHO_images_baseline_mean = [0.0514, 0.0514, 0.0514]
+CHO_images_baseline_std = [0.0446, 0.0446, 0.0446]
+CHO_images_grey_mean = [0.0514]
+CHO_images_grey_std = [0.0469]
+
+base__CHO_images_blog3 = copy.deepcopy(base__kaggle_blog3)
+base__CHO_images_blog3['traindir'] = 'CHO_images'
+base__CHO_images_blog3['testdir'] = 'CHO_images'
+base__CHO_images_blog3['labels'] = os.listdir(base__CHO_images_blog3['traindir'])
+base__CHO_images_blog3['train_transforms'] = train_transforms_380_greyscale_blog3
+base__CHO_images_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
+
+vgg_1channel_covid19_noImageNet__CHO_images_images_blog3 = copy.deepcopy(base__CHO_images_blog3)
+vgg_1channel_covid19_noImageNet__CHO_images_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__CHO_images_images_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__CHO_images_images_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_1channel_covid19_noImageNet__CHO_images_images_blog3['train_transforms'][-1] = transforms.Normalize(CHO_images_grey_mean, CHO_images_grey_std)
+vgg_1channel_covid19_noImageNet__CHO_images_images_blog3['eval_transforms'][-1] = transforms.Normalize(CHO_images_grey_mean, CHO_images_grey_std)
+
+vgg_1channel_covid19_withImageNet__CHO_images_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__CHO_images_images_blog3)
+vgg_1channel_covid19_withImageNet__CHO_images_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__CHO_images_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__CHO_images_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_withImageNet_only__CHO_images_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__CHO_images_images_blog3)
+vgg_1channel_withImageNet_only__CHO_images_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=True)'
+vgg_1channel_withImageNet_only__CHO_images_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_withImageNet_only__CHO_images_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_noImageNet_only__CHO_images_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__CHO_images_images_blog3)
+vgg_1channel_noImageNet_only__CHO_images_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=False)'
+vgg_1channel_noImageNet_only__CHO_images_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__CHO_images_blog3['traindir'] + "_" + "withoutImageNet"
+
+vgg_3channel_covid19_noImageNet__CHO_images_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__CHO_images_images_blog3)
+vgg_3channel_covid19_noImageNet__CHO_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__CHO_images_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__CHO_images_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_3channel_covid19_noImageNet__CHO_images_blog3['train_transforms'] = train_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__CHO_images_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__CHO_images_blog3['train_transforms'][-1] = transforms.Normalize(CHO_images_baseline_mean, CHO_images_baseline_std)
+vgg_3channel_covid19_noImageNet__CHO_images_blog3['eval_transforms'][-1] = transforms.Normalize(CHO_images_baseline_mean, CHO_images_baseline_std)
+
+vgg_3channel_covid19_withImageNet__CHO_images_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__CHO_images_blog3)
+vgg_3channel_covid19_withImageNet__CHO_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__CHO_images_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__CHO_images_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_withImageNet_only__CHO_images_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__CHO_images_blog3)
+vgg_3channel_withImageNet_only__CHO_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=True)'
+vgg_3channel_withImageNet_only__CHO_images_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_withImageNet_only__CHO_images_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_noImageNet_only__CHO_images_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__CHO_images_blog3)
+vgg_3channel_noImageNet_only__CHO_images_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=False)'
+vgg_3channel_noImageNet_only__CHO_images_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__CHO_images_blog3['traindir'] + "_" + "withoutImageNet"
+
+cnn_grey_covid19_only__CHO_images_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__CHO_images_images_blog3)
+cnn_grey_covid19_only__CHO_images_blog3['model'] = 'CNNGreyModelCovid19(n_classes=9, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__CHO_images_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__CHO_images_blog3['traindir'] + "_" 
+
+# #########################################################################################################################################################
+
+synimages_baseline_mean = [0.0427, 0.0058, 0.0147]
+synimages_baseline_std = [0.1487, 0.0339, 0.1005]
+synimages_grey_mean = [0.0178]
+synimages_grey_std = [0.0539]
+
+base__synimages_blog3 = copy.deepcopy(base__kaggle_blog3)
+base__synimages_blog3['traindir'] = 'synimages'
+base__synimages_blog3['testdir'] = 'synimages'
+base__synimages_blog3['labels'] = os.listdir(base__synimages_blog3['traindir'])
+base__synimages_blog3['train_transforms'] = train_transforms_380_greyscale_blog3
+base__synimages_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
+
+vgg_1channel_covid19_noImageNet__synimages_blog3 = copy.deepcopy(base__synimages_blog3)
+vgg_1channel_covid19_noImageNet__synimages_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__synimages_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__synimages_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_1channel_covid19_noImageNet__synimages_blog3['train_transforms'][-1] = transforms.Normalize(synimages_grey_mean, synimages_grey_std)
+vgg_1channel_covid19_noImageNet__synimages_blog3['eval_transforms'][-1] = transforms.Normalize(synimages_grey_mean, synimages_grey_std)
+
+vgg_1channel_covid19_withImageNet__synimages_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__synimages_blog3)
+vgg_1channel_covid19_withImageNet__synimages_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__synimages_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__synimages_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_withImageNet_only__synimages_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__synimages_blog3)
+vgg_1channel_withImageNet_only__synimages_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=True)'
+vgg_1channel_withImageNet_only__synimages_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_withImageNet_only__synimages_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_noImageNet_only__synimages_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__synimages_blog3)
+vgg_1channel_noImageNet_only__synimages_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=False)'
+vgg_1channel_noImageNet_only__synimages_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__synimages_blog3['traindir'] + "_" + "withoutImageNet"
+
+vgg_3channel_covid19_noImageNet__synimages_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__synimages_blog3)
+vgg_3channel_covid19_noImageNet__synimages_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__synimages_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__synimages_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_3channel_covid19_noImageNet__synimages_blog3['train_transforms'] = train_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__synimages_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__synimages_blog3['train_transforms'][-1] = transforms.Normalize(synimages_baseline_mean, synimages_baseline_std)
+vgg_3channel_covid19_noImageNet__synimages_blog3['eval_transforms'][-1] = transforms.Normalize(synimages_baseline_mean, synimages_baseline_std)
+
+vgg_3channel_covid19_withImageNet__synimages_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__synimages_blog3)
+vgg_3channel_covid19_withImageNet__synimages_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__synimages_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__synimages_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_withImageNet_only__synimages_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__synimages_blog3)
+vgg_3channel_withImageNet_only__synimages_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=True)'
+vgg_3channel_withImageNet_only__synimages_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_withImageNet_only__synimages_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_noImageNet_only__synimages_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__synimages_blog3)
+vgg_3channel_noImageNet_only__synimages_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=False)'
+vgg_3channel_noImageNet_only__synimages_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__synimages_blog3['traindir'] + "_" + "withoutImageNet"
+
+cnn_grey_covid19_only__synimages_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__synimages_blog3)
+cnn_grey_covid19_only__synimages_blog3['model'] = 'CNNGreyModelCovid19(n_classes=9, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__synimages_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__synimages_blog3['traindir'] + "_" 
+
+# #########################################################################################################################################################
+
+covid_lungs_ct_baseline_mean = [0.5942, 0.5939, 0.5937]
+covid_lungs_ct_baseline_std = [0.2939, 0.2941, 0.2940]
+covid_lungs_ct_grey_mean = [0.5940]
+covid_lungs_ct_grey_std = [0.2957]
+
+base__covid_lungs_ct_blog3 = copy.deepcopy(base__kaggle_blog3)
+base__covid_lungs_ct_blog3['traindir'] = 'covid_lungs_ct'
+base__covid_lungs_ct_blog3['testdir'] = 'covid_lungs_ct'
+base__covid_lungs_ct_blog3['labels'] = os.listdir(base__covid_lungs_ct_blog3['traindir'])
+base__covid_lungs_ct_blog3['train_transforms'] = train_transforms_380_greyscale_blog3
+base__covid_lungs_ct_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
+
+vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3 = copy.deepcopy(base__covid_lungs_ct_blog3)
+vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3['train_transforms'][-1] = transforms.Normalize(covid_lungs_ct_grey_mean, covid_lungs_ct_grey_std)
+vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3['eval_transforms'][-1] = transforms.Normalize(covid_lungs_ct_grey_mean, covid_lungs_ct_grey_std)
+
+vgg_1channel_covid19_withImageNet__covid_lungs_ct_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3)
+vgg_1channel_covid19_withImageNet__covid_lungs_ct_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__covid_lungs_ct_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__covid_lungs_ct_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_withImageNet_only__covid_lungs_ct_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3)
+vgg_1channel_withImageNet_only__covid_lungs_ct_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=True)'
+vgg_1channel_withImageNet_only__covid_lungs_ct_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_withImageNet_only__covid_lungs_ct_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_noImageNet_only__covid_lungs_ct_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3)
+vgg_1channel_noImageNet_only__covid_lungs_ct_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=False)'
+vgg_1channel_noImageNet_only__covid_lungs_ct_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__covid_lungs_ct_blog3['traindir'] + "_" + "withoutImageNet"
+
+vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3)
+vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3['train_transforms'] = train_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3['train_transforms'][-1] = transforms.Normalize(covid_lungs_ct_baseline_mean, covid_lungs_ct_baseline_std)
+vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3['eval_transforms'][-1] = transforms.Normalize(covid_lungs_ct_baseline_mean, covid_lungs_ct_baseline_std)
+
+vgg_3channel_covid19_withImageNet__covid_lungs_ct_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3)
+vgg_3channel_covid19_withImageNet__covid_lungs_ct_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__covid_lungs_ct_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__covid_lungs_ct_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_withImageNet_only__covid_lungs_ct_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3)
+vgg_3channel_withImageNet_only__covid_lungs_ct_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=True)'
+vgg_3channel_withImageNet_only__covid_lungs_ct_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_withImageNet_only__covid_lungs_ct_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_noImageNet_only__covid_lungs_ct_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__covid_lungs_ct_blog3)
+vgg_3channel_noImageNet_only__covid_lungs_ct_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=False)'
+vgg_3channel_noImageNet_only__covid_lungs_ct_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__covid_lungs_ct_blog3['traindir'] + "_" + "withoutImageNet"
+
+cnn_grey_covid19_only__covid_lungs_ct_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__covid_lungs_ct_blog3)
+cnn_grey_covid19_only__covid_lungs_ct_blog3['model'] = 'CNNGreyModelCovid19(n_classes=9, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__covid_lungs_ct_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__covid_lungs_ct_blog3['traindir'] + "_" 
+
+# #########################################################################################################################################################
+
+blood_WBC_segmented_baseline_mean = [0.6689, 0.5986, 0.7771]
+blood_WBC_segmented_baseline_std = [0.1027, 0.1482, 0.0534]
+blood_WBC_segmented_grey_mean = [0.6400]
+blood_WBC_segmented_grey_std = [0.1149]
+
+base__blood_WBC_segmented_blog3 = copy.deepcopy(base__kaggle_blog3)
+base__blood_WBC_segmented_blog3['traindir'] = 'blood_WBC_segmented'
+base__blood_WBC_segmented_blog3['testdir'] = 'blood_WBC_segmented'
+base__blood_WBC_segmented_blog3['labels'] = os.listdir(base__blood_WBC_segmented_blog3['traindir'])
+base__blood_WBC_segmented_blog3['train_transforms'] = train_transforms_380_greyscale_blog3
+base__blood_WBC_segmented_blog3['eval_transforms'] = eval_transforms_380_greyscale_blog3
+
+vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3 = copy.deepcopy(base__blood_WBC_segmented_blog3)
+vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withoutImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3['train_transforms'][-1] = transforms.Normalize(blood_WBC_segmented_grey_mean, blood_WBC_segmented_grey_std)
+vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3['eval_transforms'][-1] = transforms.Normalize(blood_WBC_segmented_grey_mean, blood_WBC_segmented_grey_std)
+
+vgg_1channel_covid19_withImageNet__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+vgg_1channel_covid19_withImageNet__blood_WBC_segmented_blog3['model'] = 'Vgg19OneChannelModelAllLayersCovid19(saved_model="./saved_models/cellnet_Vgg19_1channel_rotations_covid_withImageNet50000samples_.torch", n_classes=9, learning_rate=1e-3)'
+vgg_1channel_covid19_withImageNet__blood_WBC_segmented_blog3['name'] = 'Vgg19OneChannelModelAllLayersCovid19' + "_" + vgg_1channel_covid19_withImageNet__blood_WBC_segmented_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_withImageNet_only__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+vgg_1channel_withImageNet_only__blood_WBC_segmented_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=True)'
+vgg_1channel_withImageNet_only__blood_WBC_segmented_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_withImageNet_only__blood_WBC_segmented_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_1channel_noImageNet_only__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+vgg_1channel_noImageNet_only__blood_WBC_segmented_blog3['model'] = 'Vgg19OneChannelModelAllLayers(n_classes=9, learning_rate=1e-5, pretrained=False)'
+vgg_1channel_noImageNet_only__blood_WBC_segmented_blog3['name'] = 'Vgg19OneChannelModelAllLayers' + "_" + vgg_1channel_noImageNet_only__blood_WBC_segmented_blog3['traindir'] + "_" + "withoutImageNet"
+
+vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withoutImageNet50000samples_.torch")'
+vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3['traindir'] + "_" + "withoutImageNet"
+vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3['train_transforms'] = train_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3['eval_transforms'] = eval_transforms_224_RGB_blog3
+vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3['train_transforms'][-1] = transforms.Normalize(blood_WBC_segmented_baseline_mean, blood_WBC_segmented_baseline_std)
+vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3['eval_transforms'][-1] = transforms.Normalize(blood_WBC_segmented_baseline_mean, blood_WBC_segmented_baseline_std)
+
+vgg_3channel_covid19_withImageNet__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+vgg_3channel_covid19_withImageNet__blood_WBC_segmented_blog3['model'] = 'Vgg19ThreeChannelModelAllLayersCovid19(n_classes=9, learning_rate=1e-3, saved_model="./saved_models/cellnet_Vgg19_3channel_rotations_covid_withImageNet50000samples_.torch")'
+vgg_3channel_covid19_withImageNet__blood_WBC_segmented_blog3['name'] = 'Vgg19ThreeChannelModelAllLayersCovid19' + "_" + vgg_3channel_covid19_withImageNet__blood_WBC_segmented_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_withImageNet_only__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+vgg_3channel_withImageNet_only__blood_WBC_segmented_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=True)'
+vgg_3channel_withImageNet_only__blood_WBC_segmented_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_withImageNet_only__blood_WBC_segmented_blog3['traindir'] + "_" + "withImageNet"
+
+vgg_3channel_noImageNet_only__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_3channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+vgg_3channel_noImageNet_only__blood_WBC_segmented_blog3['model'] = 'Vgg19ThreeChannelModelAllLayers(n_classes=9, learning_rate=1e-3, pretrained=False)'
+vgg_3channel_noImageNet_only__blood_WBC_segmented_blog3['name'] = 'Vgg19ThreeChannelModelAllLayers' + "_" + vgg_3channel_noImageNet_only__blood_WBC_segmented_blog3['traindir'] + "_" + "withoutImageNet"
+
+cnn_grey_covid19_only__blood_WBC_segmented_blog3 = copy.deepcopy(vgg_1channel_covid19_noImageNet__blood_WBC_segmented_blog3)
+cnn_grey_covid19_only__blood_WBC_segmented_blog3['model'] = 'CNNGreyModelCovid19(n_classes=9, learning_rate=1e-4, saved_model="./saved_models/cellnet_CNNGrey_1channel_rotations_covid_50000samples_.torch")'
+cnn_grey_covid19_only__blood_WBC_segmented_blog3['name'] = 'CNNGreyModelCovid19' + "_" + cnn_grey_covid19_only__blood_WBC_segmented_blog3['traindir'] + "_" 
 

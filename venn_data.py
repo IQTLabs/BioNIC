@@ -313,7 +313,7 @@ weights = torch.DoubleTensor(weights)
 sampler = torch.utils.data.sampler.WeightedRandomSampler(weights, len(weights))
 print('len of train', len(cifar10_trainset))
 trainset = MyDataset(cifar10_trainset)
-cifar10_trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, num_workers=2)#, sampler=sampler)
+cifar10_trainloader = torch.utils.data.DataLoader(trainset, batch_size=batch_size, num_workers=2, shuffle=True) #sampler=sampler)
 
 cifar10_testset = ImageFolderWithPaths(root=testdir, transform=image_transforms['test'])
 weights = make_weights_for_balanced_classes(cifar10_testset.imgs, len(cifar10_testset.classes))                                                                
@@ -388,14 +388,14 @@ for ii in range(n_restarts):
     old_data_weights = data_weights
     files = [""] * len(cifar10_trainloader.dataset)
 
-    count = 0
+    count = 1
     # 1. for each epoch
     for jj in range(n_epoch):
         t=time.time()
 
         # 2. 3., Get the train and validate batches
         for batch, batch_eval in zip(cifar10_trainloader, cifar10_trainloader):   
-            print('start ', data_weights)    
+            print('data_weights', data_weights)    
             imgs, labels, filenames, ind = batch
             array_ind = list(ind.numpy())
             ctr = 0
@@ -403,6 +403,12 @@ for ii in range(n_restarts):
                 files[array_ind[ctr]] = filenames[ctr]
                 ctr += 1
             imgs, labels = imgs.to(device), labels.to(device) 
+            #print(imgs[0])
+            #for i in labels:
+            #    print(i)
+            #print(files[0])
+            #print(ind[0])
+            #quit()
             
             imgs_eval, labels_eval, _, _ = batch_eval # KINGA: had to add _
             imgs_eval, labels_eval = imgs_eval.to(device), labels_eval.to(device) 
@@ -411,6 +417,7 @@ for ii in range(n_restarts):
 
             # 5 (a). set the leanred data weights (epsilons) to zero 
             batch_data_weights = (torch.tensor(data_weights[ind], requires_grad=True, device = device)) # the data weigths for this batch of images
+            print('batch_data_weights ', batch_data_weights)
 
             # NORMAL FORWARD PASS ###################################################################################################################################################
             #    used to calculate the normal training loss
@@ -420,17 +427,17 @@ for ii in range(n_restarts):
                 print('weights ', weights)
                 # 4. first forward pass
                 output = net.forward_with_param(imgs, weights)
-                print('output ', output)
+                print('train output ', output)
                 # 5 (b). calculate the loss of the main predictions, using the epsilons
                 # the data_weights are used to calculate the loss, whereas normally all inputs are weighted equal for loss calculation
                 # Felipe does the sigmoid; the paper does the softmax
                 loss = weighted_cross_entropy(output, labels, torch.sigmoid(batch_data_weights))
+                print('train loss ', loss)
 
             # BACKWARD PASS #########################################################################################################################################################
             #    used the loss to update the weights of the model
             # puts the learning rate of the model into a tensor, which we need because we'll combine lr with gradients and weights later
             lr_tensor = torch.tensor(lr_model).to(device)
-            print('loss ', loss)
             print('lr_tensor ', lr_tensor)
             
             # 6. calculate the gradients for the model weights
@@ -451,27 +458,34 @@ for ii in range(n_restarts):
                 # 8. makes predictions on the validation set
                 output = net.forward_with_param(imgs_eval, weights) #I don't think this weights was updated by gradient_weights ever????????
                 # 9. calculates the average loss for the validation set (note no epsilons/weighting here by inputs)
+                print('valid output ', output)
                 loss0 = criterion(output, labels_eval) # calculates CrossEntropyLoss for eval
+                print('valid loss0 ', loss0)
 
             # BACKWARD PASS #########################################################################################################################################################
             
             # 10. calculates the gradients of the epsilons using the loss0 above
             # calculates the gradients from the weights and the loss; these are used to update the weights later
-            dw, = torch.autograd.grad(loss0, (weights,))
+            gradient_of_epsilons, = torch.autograd.grad(loss0, (weights,))
+            print('gradient_of_epsilons gradients of epsilon ', gradient_of_epsilons)
 
             # 11 (a). negates the gradient of the epsilon  gets the best data weight so far 
             # negative because you're trying to maximize the gradient alignment; want to make dw the gradient of the weights relative to the eval loss * grad of weights of the training loss; make is as big as possible
-            dgw = dw.neg() # gw is already weighted by lr, so simple negation
+            gradient_of_epsilons = gradient_of_epsilons.neg() # gw is already weighted by lr, so simple negation
+            print('gradient_of_epsilons.neg ', gradient_of_epsilons)
 
             # 11 (b). calculating the updated data weight; multiplying the lr_tensor times the outputs, then doing the backwards through that
             # Felipe's new changes do not use hvp_grad (gradient alignment versus optimizing for loss -- he changed so it optimizes for eval loss; changed model update -- moved #7 back up higher, aloows it to look at eval loss)
             # and just call backward; gives you the gradients to update the images weight
+            print('gradient_weights ', gradient_weights)
+            print('batch_data_weights ', batch_data_weights)
+            print('gradient_of_epsilons ', gradient_of_epsilons)
             hvp_grad = torch.autograd.grad(
                 outputs=(gradient_weights,),
                 inputs=[batch_data_weights],
-                lr_tensor=(dgw,)
+                grad_outputs=(gradient_of_epsilons,)
             )
-            print('hvp_grad ', hvp_grad)
+            print('hvp_grad (updated data weights)', hvp_grad)
                
             # UPDATE DATA SCORE; new weight = old_weight - learning_rate * derivative
             # momentum is used to speed up the learning, when the slope is steep. It is typically started with 0.9, and called gamma.
@@ -481,12 +495,12 @@ for ii in range(n_restarts):
             # the dataweights (theta) are updated by subtracting out the [learning_rate * loss_funcion_we_are_trying_to_optimize + momentum calculated above]
             data_weights.data[ind] = data_weights.data[ind] - data_mom.data[ind]
 
-            print('end ', data_weights) 
+            print('end data_weights', data_weights) 
             #files[ind] = filenames[ind] 
             # update model weights
             net.zero_grad()
             print('zero grad net on batch ')
-            if count == 1:
+            if count == 2:
                 quit()
 
 
@@ -502,10 +516,17 @@ for ii in range(n_restarts):
 
                 # update the momentum, using the first expotential decay term (beta1)
                 mt = b1 * mt + (1 - b1) * gradient_weights
+                print('mt ', mt)
                 # update the last updates, using the second exponential decay term (beta2)
                 vt = b2 * vt + (1 - b2) * gradient_weights ** 2
+                print('vt ', vt)
                 # take the previous weights, and subtract the (learning_rate * momentum) / (sqrt_of_last_weights_update + eps)
+                print('count ', count)
+                print('(1 - b2 ** count) ', (1 - b2 ** count))
+                print('torch.sqrt(vt/ (1 - b2 ** count)) ', torch.sqrt(vt/ (1 - b2 ** count)) )
+                print('(mt / (1 - b1 ** count)) ', (mt / (1 - b1 ** count)))
                 weights = weights - 1 / (torch.sqrt(vt/ (1 - b2 ** count)) + eps) * (mt / (1 - b1 ** count))
+                print('updated model weights after adam ', weights)
                 weights = weights.requires_grad_()
             count += 1
 

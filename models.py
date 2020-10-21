@@ -169,18 +169,19 @@ class Model():
                     ctr += 1
                 valid_loss /= len(val_loader.dataset)
                 result = 'Epoch: {}, Training Loss: {:.2f},Validation Loss: {:.2f}, accuracy = {:.2f}, weighted accuracy on valid: {:.2f}'.format(epoch, training_loss, valid_loss, num_correct / num_examples, 
-                    balanced_accuracy_score(all_preds, all_targets))
+                    weighted_accuracy(all_preds, all_targets))
             
             else:
                 valid_loss = 0.0
                 result = 'Epoch: {}, Training Loss: {:.2f},Validation Loss: {:.2f}, accuracy = {:.2f}, weighted accuracy on train: {:.2f}'.format(epoch, training_loss, valid_loss, num_correct / num_examples, 
-                    balanced_accuracy_score(all_preds, all_targets))
-                curve.write(str(epoch)+","+str(training_loss)+","+str(balanced_accuracy_score(all_preds, all_targets))+"\n")
+                    weighted_accuracy(all_preds, all_targets))
+                curve.write(str(epoch)+","+str(training_loss)+","+str(weighted_accuracy(all_preds, all_targets))+"\n")
 
             # if we set the scheduler above, we need to update it
             #self.scheduler.step()
 
             print(result)
+            print('finished version ' + str(versionNum))
             print("saving checkpoint ./" + model_options['name'] + "_" + str(versionNum) + ".torch")
             torch.save(self.model.state_dict(), "./" + model_options['name'] + "_" + str(versionNum) + ".torch")
             print(type(self.model))

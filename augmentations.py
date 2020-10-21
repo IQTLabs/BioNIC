@@ -122,12 +122,13 @@ class ErosionAndDilation:
 class TopHat:
     """ an intelligent way to emphasize finer details in an image when trying to binarize (which it could/should be 
         combined with) """
-    def __init__(self, multichannel=True):
+    def __init__(self, multichannel=True, kernel=10):
         self.multichannel = multichannel
+        self.kernel = kernel
 
     def __call__(self, x):
         openCVim = numpy.array(x)
-        kernel = numpy.ones((10,10),numpy.uint8)
+        kernel = numpy.ones((self.kernel,self.kernel),numpy.uint8)
         if openCVim.shape[-1] > 3:
             cv2.imwrite('dummy4.jpg', openCVim, [int(cv2.IMWRITE_JPEG_QUALITY), 100])
             openCVim = numpy.array(Image.open("./dummy4.jpg"))
@@ -209,3 +210,16 @@ class RGB:
         Image.fromarray(openCVim).save('./temp.tif')
         openCVim = cv2.imread('./temp.tif', cv2.IMREAD_GRAYSCALE)
         return Image.fromarray(openCVim).convert('RGB')
+
+class Debug:
+    """ saves image for manual examination """
+    def __init__(self, multichannel=True):
+        self.multichannel = multichannel
+
+    def __call__(self, x):
+        print("in debug ", type(x))
+        print(x)
+        print(list(numpy.asarray(x)))
+        x.save("./final.jpeg", "JPEG")
+        return x
+

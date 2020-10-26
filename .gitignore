@@ -2,3 +2,12 @@
 .DS_Store
 .DS_Store
 *.pyc
+.ipynb_checkpoints/cellnet_results-checkpoint.ipynb
+.ipynb_checkpoints/display_results-checkpoint.ipynb
+.ipynb_checkpoints/display_results_internal_bright_field-checkpoint.ipynb
+.DS_Store
+*.png
+display_results_internal_bright_field.ipynb
+internal_brightfield_config.py
+internal_brightfield_config.py
+.DS_Store

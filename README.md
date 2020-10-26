@@ -1,8 +1,14 @@
 # BioNIC
 optimizing deep learning for ultra-small biomedical datasets 
 
+## Project goal
+Building models that can distinguish between different biological classes, for example:
+- images of healthy cell cultures, versus diseased/decayed ones
+- classifying different images of cell types in cell cultures
+- classifying the type of an individual, pre-segmented cell
+
 ## Project description
-This codebase sets up an infrastructure to train and evaluate deep learning models on ultra-small (less than 1000 samples) biomedical imagery datasets. It is meant to be used to triage biomedical images for human inspection, based on the confidence in a prediction. That is, high-confidence predictions by the models can be used directly, while lower-confidence predictions will need to be manually evaluated.
+This codebase sets up an infrastructure to train and evaluate deep learning models on classification of ultra-small (less than 1000 samples) biomedical imagery datasets. It is meant to be used to triage biomedical images for human inspection, based on the confidence in a prediction. That is, high-confidence predictions by the models can be used directly, while lower-confidence predictions will need to be manually evaluated.
 
 The user is responsible for dividing their images into train, evaluate, and holdout sets, and specifying the configuration parameters of the models. Multiple models can be built off the same training data, and evaluated against one another.
 
@@ -64,5 +70,7 @@ Finally, you can view the results graphically by specifying the csv of results c
 - `cellnet_pull.py`: Converts a five-channel, 100K covid19 dataset into a single-channel (greyscale) covid19 dataset with five classes; we use this to evaluate transfer learnining from a classifier built off this model.
 
 ## Further reading
-We will be updating this section with results and blog posts for our experimentation using transfer learning, data transformations and augmentation, and other metrics.
+Check out our blog series on the BioNIC project:
+- Transfer Learning for Classification in Ultra-small Biomedical Datasets [Part 1](https://gab41.lab41.org/transfer-learning-for-classification-in-ultra-small-biomedical-datasets-2d332ae87bfb)
+- Transfer Learning for Classification in Ultra-small Biomedical Datasets [Part 2](https://gab41.lab41.org/transfer-learning-for-classification-in-ultra-small-biomedical-datasets-part-ii-d3bc3097bc1d)
 

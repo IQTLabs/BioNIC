@@ -133,9 +133,9 @@ def scoreResults(results_df, name, model_options, aggregateResults, holdout_conf
 
     # calculate various metrics for the voting algorithm
     print('OVERALL ' + name + ' weighted accuracy: ', weighted)
-    #print('OVERALL ' + name + ' weighted recall: ', balanced_accuracy_score(votes, all_targets, adjusted=True))
-    #print('OVERALL ' + name + ' precision_score: ', precision_score(votes, all_targets, average='weighted'))
-    #print('OVERALL ' + name + ' recall: ', recall_score(votes, all_targets, average='weighted'))
+    #print('OVERALL ' + name + ' weighted accuracy: ', balanced_accuracy_score(votes, all_targets, adjusted=True))
+    print('OVERALL ' + name + ' precision_score: ', precision_score(votes, all_targets, average='weighted'))
+    print('OVERALL ' + name + ' recall: ', recall_score(votes, all_targets, average='weighted'))
     #print('OVERALL ' + name + ' f1: ', f1_score(votes, all_targets, average='macro'))
 
     if write_file:

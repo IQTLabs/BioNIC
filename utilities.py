@@ -153,8 +153,8 @@ def createTiles(root, dest, subfolders, centerCropSize, numTiles):
 			image_slicer.save_tiles(tiles, directory= dest + "/" + label + "/", prefix='tile_' + f)
 			print("finished tiling " + label + " to " + dest)
 
-createTiles("/Users/kdobolyi/Downloads/Labeled_Images_color", "/Users/kdobolyi/Downloads/Labeled_Images_color_tiles", 
-	['good', 'bad'], 1200, 2)
+#createTiles("/Users/kdobolyi/Downloads/Labeled_Images_color", "/Users/kdobolyi/Downloads/Labeled_Images_color_tiles", 
+#	['good', 'bad'], 1200, 2)
 
 def makeImageFolders(csv, file_dir_source, file_dir_dest, labels):
 	""" takes a directory of raw images, and a csv in Image_Name,label format, and turns it into ImageFolder style
@@ -185,3 +185,31 @@ def makeImageFolders(csv, file_dir_source, file_dir_dest, labels):
 
 #makeImageFolders('/Users/kdobolyi/Downloads/Labeled_Images_2ndSet/Image_Label_association.csv', 
 #	'/Users/kdobolyi/Downloads/Labeled_Images_color_split', '/Users/kdobolyi/Downloads/Labeled_Images_color/', ['good', 'bad'])
+
+
+def getAverageImage(directory, name):
+	""" Places random files into a new folder, <root>_subset_<size> 
+
+		Arguments:
+			root: the source folder of all the images, which has a subfolder for each label (like ImageFolder)
+			size: what the size of the random subset should be
+
+	"""
+
+	imlist = clean(os.listdir(directory))
+	width, height =Image.open(directory + imlist[0]).size
+	arr = np.zeros((height, width, 3),np.float)
+
+	# Build up average pixel intensities, casting each image as an array of floats
+	for im in imlist:
+	    print(im)
+	    imarr = np.array(Image.open(directory + im), dtype=np.float)
+	    arr = arr + imarr / (len(imlist) * 1.0)
+
+	# Round values in array and cast as 8-bit integer, save average image
+	arr = np.array(np.round(arr), dtype=np.uint8)
+	out = Image.fromarray(arr, mode="RGB")
+	out.save("average" + name + ".png")
+
+getAverageImage("/Users/kdobolyi/Downloads/Labeled_Images_color/bad/", "bad")
+getAverageImage("/Users/kdobolyi/Downloads/Labeled_Images_color/good/", "good")

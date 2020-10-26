@@ -50,8 +50,7 @@ from internal_brightfield_config import *
 # BASIC CONFIGURATION
 # #####################################################################################################################
 batch_size = 8
-epochs = 20             # default epochs (can be overriden in *_config.py for your models)
-learning_rate = 1e-5
+epochs = 8             # default epochs (can be overriden in *_config.py for your models)
 device = "cuda"
 
 calcStats = False  # turn this on if you want to calc mean and stddev of training dataset for normalization in transform
@@ -79,7 +78,7 @@ if calcStats == False:
     # if you want to overrride the default number of epochs specified at the top of this file
     if 'epochs' in model.keys():
         epochs = model['epochs']
-    scoring = "_" + str(epochs) + "epochs_lr" + str(learning_rate).replace("0.", "_")            # "_recall", etc
+    scoring = "_" + str(epochs) + "epochs_lr" + str(model['model'].split('learning_rate=')[1].split(',')[0].replace("0.", "_"))            # "_recall", etc
     model['file_label'] = scoring
 
     # you will set this to True the first time you run this code on a new dataset to generate a global holdout, then 
@@ -102,6 +101,11 @@ image_transforms = {
     'train': transforms.Compose(model['train_transforms']),
     'test': transforms.Compose(model['eval_transforms']),
 }
+if 'holdout_transforms' in model.keys():    # if there is special processing for the holdout dataset
+    image_transforms['holdout'] = transforms.Compose(model['holdout_transforms'])
+else:
+    image_transforms['holdout'] = image_transforms['test'] 
+
 
 # prepare to store the results from all the runs
 results_normal = pandas.DataFrame()
@@ -152,7 +156,7 @@ def runTrainAndTest(train_dataset, test_dataset, dataloaders, f_label, results_n
     print("testing model on holdout...")
     all_preds, all_targets, confidences, paths = neurons.test(dataloaders['holdout_normal'], device, model, aggregateResults, "holdout")
     results_normal['target'] = all_targets
-    results_normal['preds_' + str(f)] = all_preds
+    results_normal['preds_' + str(f_label)] = all_preds
     confidence_mapping = zip(paths, confidences, all_preds, all_targets)
     return confidence_mapping
 
@@ -179,8 +183,8 @@ if model['usesCV']:
             #break
         #if testIndex == 1:     # these three commented out lines are just used for debugging to avoid doing CVfolds
             #break
-else:
-    holdout_normal =ImageFolderWithPaths(root=model['holdout'], transform=image_transforms['test'])
+else: 
+    holdout_normal =ImageFolderWithPaths(root=model['holdout'], transform=image_transforms['holdout'])
     dataloaders = {'holdout_normal': DataLoader(holdout_normal, batch_size=batch_size, shuffle=False)}
 
     for r in list(range(int((cvFolds * repeats) / non_CV_div))):
